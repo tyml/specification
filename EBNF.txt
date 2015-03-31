@@ -1,0 +1,40 @@
+/* http://www.bottlecaps.de/rr/ui */
+
+WS  ::= (' ' | #x0A | #x0D | '{--' Identifier? ' ' (AnyCharacter* ' ')? Identifier? '--}')+
+
+Identifier      ::= [a-zA-Z_][a-zA-Z0-9._-]*
+NSIdentifier    ::= (Identifier '/')? Identifier
+
+AnyCharacter            ::= /* Any unicode character. */
+StringCharacter         ::= /* Any unicode character, except '\', \n, \r, '<', '>' */
+ImplicitStringCharacter ::= /* Any unicode character, except '\', '<', '>', '{', '}', '[', ']' */
+
+EscapeSequence  ::= '\r' | '\n' | '\t' | '\\' | '\<' | '\>'
+        | '\[' | '\]' | '\{' | '\}' | '\u' [0-9A-F][0-9A-F][0-9A-F][0-9A-F] | '\' #x0A
+
+Grammer         ::= DocumentHeader WS? (AliasDef WS?)* Object WS?
+DocumentHeader  ::= '{!tyml' (' 1.0')? 
+        (' encoding:<' StringCharacter* '>')?
+        (WS NSDefAttribute)* WS?
+    '}'
+
+AliasDef ::= '{!alias' WS  '<#' Identifier '>' WS NormalString WS?  '}'
+
+Element         ::= NormalString | EscapedString | Primitive | Object | NormalArray | MarkupArray
+
+NormalString    ::= '<' (StringCharacter | EscapeSequence)* '>'
+EscapedString   ::= ('<<' (AnyCharacter* | '\' EscapeSequence) '>>') 
+                    | ('<' Identifier  '<' (AnyCharacter* | '\' Identifier EscapeSequence) '>' Identifier  '>')
+
+Primitive       ::= [a-zA-Z0-9_-+*=|~!?.,;/\"'()^&@%$#]*
+
+Object          ::= '{' (NSIdentifier | '?' | '#' Identifier) 
+                    (WS NSDefAttribute)* (WS (Element | Attribute))* WS? '}'
+NSDefAttribute  ::= '!ns' ('/' Identifier)? ':' WS? NormalString
+Attribute       ::= NSIdentifier ':' WS? Element
+
+NormalArray           ::= '[' WS? (Element (WS Element)*)? WS? ']'
+
+MarkupArray     ::= '![' MarkupElement* ']'
+MarkupElement   ::= NormalString | EscapedString | Object | ImplicitString
+ImplicitString  ::= (ImplicitStringCharacter | EscapeSequence)*
