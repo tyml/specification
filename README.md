@@ -53,7 +53,7 @@ to describe a simple contact book:
 ```
 
 Further examples and their xml, json and yaml equivalent can be found in the
-"examples" directory.
+[examples](/examples) directory.
 
 Specification
 -------------

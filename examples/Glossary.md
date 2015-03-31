@@ -1,7 +1,7 @@
 Example "Glossary"
 ==================
 
-Taken from http://json.org/example.
+Taken from [json.org/examples](http://json.org/example).
 
 ```tyml
 {!tyml 1.0 !ns:<http://glossary.org/tyml-schema/1.0>}

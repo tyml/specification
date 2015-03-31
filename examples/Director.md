@@ -1,6 +1,8 @@
 Example "Director"
 ==================
 
+Inspired by [this discussion](http://stackoverflow.com/questions/51492/what-usable-alternatives-to-xml-syntax-do-you-know).
+
 ```tyml
 {!tyml 1.0 !ns:<http://movies.mov/tyml-schema/1.0>}
 {-- Spielberg was born in 1946 --}
