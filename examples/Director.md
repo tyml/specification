@@ -1,7 +1,7 @@
 Example "Director"
 ==================
 
-Inspired by [this discussion](http://stackoverflow.com/questions/51492/what-usable-alternatives-to-xml-syntax-do-you-know).
+Inspired by [this answer](http://stackoverflow.com/questions/51492/what-usable-alternatives-to-xml-syntax-do-you-know#answer-2567924).
 
 ```tyml
 {!tyml 1.0 !ns:<http://movies.mov/tyml-schema/1.0>}
