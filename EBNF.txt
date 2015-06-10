@@ -7,15 +7,14 @@ WS  ::= (' ' | #x0A | #x0D | '{--' Identifier? ' ' (AnyCharacter* ' ')? Identifi
 Identifier      ::= [a-zA-Z_][a-zA-Z0-9._-]*
 NSIdentifier    ::= (Identifier '/')? Identifier
 
-AnyCharacter            ::= /* Any unicode character. */
-StringCharacter         ::= /* Any unicode character, except '\', \n, \r, '<', '>' */
-ImplicitStringCharacter ::= /* Any unicode character, except '\', '<', '>', '{', '}', '[', ']' */
+AnyCharacter            ::= /* Any character. */
+StringCharacter         ::= /* Any character, except '\', \n, \r, '<', '>' */
+ImplicitStringCharacter ::= /* Any character, except '\', '<', '>', '{', '}', '[', ']' */
 
 EscapeSequence  ::= '\r' | '\n' | '\t' | '\\' | '\<' | '\>'
         | '\[' | '\]' | '\{' | '\}' | '\u' [0-9A-F][0-9A-F][0-9A-F][0-9A-F] | '\' #x0A
 
-DocumentHeader  ::= '{!tyml' (' 1.0')? 
-        (' encoding:<' StringCharacter* '>')?
+DocumentHeader  ::= '{!tyml' (' 1.0')?
         (WS NSDefAttribute)* WS?
     '}'
 
@@ -29,7 +28,7 @@ EscapedString   ::= ('<<' (AnyCharacter* | '\' EscapeSequence) '>>')
 
 Primitive       ::= [a-zA-Z0-9_-+*=|~!?.,;/\"'()^&@%$#]*
 
-Object          ::= '{' (NSIdentifier | '?' | '#' Identifier) 
+Object          ::= '{' (NSIdentifier | '#' Identifier) 
                     (WS NSDefAttribute)* (WS (Element | Attribute))* WS? '}'
 NSDefAttribute  ::= '!ns' ('/' Identifier)? ':' WS? NormalString
 Attribute       ::= NSIdentifier ':' WS? Element
