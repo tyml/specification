@@ -2,27 +2,29 @@
 
 Document         ::= DocumentHeader WS? (AliasDef WS?)* Object WS?
 
-WS  ::= (' ' | #x0A | #x0D | '{--' Identifier? ' ' (AnyCharacter* ' ')? Identifier? '--}')+
+SingleLineWS ::= ' ' | #x09
+SimpleWS ::= SingleLineWS | #x0D | #x0A
+WS       ::= (SimpleWS | '{--' Identifier? SimpleWS (AnyCharacter* SimpleWS)? Identifier? '--}')+
 
 Identifier      ::= [a-zA-Z_][a-zA-Z0-9._-]*
 NSIdentifier    ::= (Identifier '/')? Identifier
 
 AnyCharacter            ::= /* Any character. */
-StringCharacter         ::= /* Any character, except '\', \n, \r, '<', '>' */
-ImplicitStringCharacter ::= /* Any character, except '\', '<', '>', '{', '}', '[', ']' */
+OrdinaryStringCharacter ::= /* Any character, except '\', \n, \r, '<', '>' */
+MarkupStringCharacter ::= /* Any character, except '\', '<', '>', '{', '}', '[', ']' */
 
 EscapeSequence  ::= '\r' | '\n' | '\t' | '\\' | '\<' | '\>'
-        | '\[' | '\]' | '\{' | '\}' | '\u' [0-9A-F][0-9A-F][0-9A-F][0-9A-F] | '\' #x0A
+        | '\[' | '\]' | '\{' | '\}' | '\u' [0-9A-F][0-9A-F][0-9A-F][0-9A-F] | '\' #x0D? #x0A SingleLineWS*
 
 DocumentHeader  ::= '{!tyml' (' 1.0')?
         (WS NSDefAttribute)* WS?
     '}'
 
-AliasDef ::= '{!alias' WS  '<#' Identifier '>' WS NormalString WS?  '}'
+AliasDef ::= '{!alias' WS  '<#' Identifier '>' WS OrdinaryString WS?  '}'
 
-Element         ::= NormalString | EscapedString | Primitive | Object | NormalArray | MarkupArray
+Element         ::= OrdinaryString | EscapedString | Primitive | Object | OrdinaryArray | MarkupArray
 
-NormalString    ::= '<' (StringCharacter | EscapeSequence)* '>'
+OrdinaryString  ::= '<' (OrdinaryStringCharacter | EscapeSequence)* '>'
 EscapedString   ::= ('<<' (AnyCharacter* | '\' EscapeSequence) '>>') 
                     | ('<' Identifier  '<' (AnyCharacter* | '\' Identifier EscapeSequence) '>' Identifier  '>')
 
@@ -30,11 +32,11 @@ Primitive       ::= [a-zA-Z0-9_-+*=|~!?.,;/\"'()^&@%$#]+
 
 Object          ::= '{' (NSIdentifier | '#' Identifier) 
                     (WS NSDefAttribute)* (WS (Element | Attribute))* WS? '}'
-NSDefAttribute  ::= '!ns' ('/' Identifier)? ':' WS? NormalString
+NSDefAttribute  ::= '!ns' ('/' Identifier)? ':' WS? OrdinaryString
 Attribute       ::= NSIdentifier ':' WS? Element
 
-NormalArray     ::= '[' WS? (Element (WS Element)*)? WS? ']'
+OrdinaryArray   ::= '[' WS? (Element (WS Element)*)? WS? ']'
 
 MarkupArray     ::= '![' MarkupElement* ']'
-MarkupElement   ::= NormalString | EscapedString | Object | ImplicitString
-ImplicitString  ::= (ImplicitStringCharacter | EscapeSequence)*
+MarkupElement   ::= OrdinaryString | EscapedString | Object | MarkupString
+MarkupString    ::= (MarkupStringCharacter | EscapeSequence)*
