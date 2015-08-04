@@ -1,0 +1,151 @@
+{!tyml !ns:<http://tyml.org/tyml-testcases>}
+{TestCases [
+	{TestCase
+		<tyml<{!tyml !ns:<http://test.de>}{Root}>tyml>
+
+		ResultXml:<xml<
+			<Document xmlns="http://tyml.org/tyml-xml" Start="0" End="34">
+				<Header Start="0" End="28">
+				</Header>
+				<Object Name="Root" Start="28" End="34">
+				</Object>
+			</Document>
+		>xml>
+	}
+	
+	
+	{TestCases Name:<Invalid header> [
+
+		{TestCase
+			<tyml<{!tyml«1»>tyml>
+			Errors:[
+				{Error <Expected header end element.> Location:{TextPoint 1}}
+				{Error <Missing root object.> Location:{TextPoint 1}}
+			]
+		}
+
+		{TestCase
+			<tyml<«1»>tyml>
+			Errors:[
+				{Error <Missing header.> Location:{TextPoint 1}}
+				{Error <Missing root object.> Location:{TextPoint 1}}
+			]
+		}
+
+		{TestCase
+			<tyml<«1»{p/Root !ns/p:<http://test.de>}>tyml>
+			Errors:[
+				{Error <Missing header.> Location:{TextPoint 1}}
+			]
+		}
+	]}
+
+
+	{TestCases Name:<Missing root object> [
+
+		{TestCase
+			<tyml<{!tyml}«1»>tyml>
+			Errors:[
+				{Error <Missing root object.> Location:{TextPoint 1}}
+			]
+		}
+
+		{TestCase
+			<tyml<{!tyml} «1»>tyml>
+			Errors:[
+				{Error <Missing root object.> Location:{TextPoint 1}}
+			]
+		}
+
+		{TestCase
+			<tyml<{!tyml} «1»a «2»>tyml>
+			Errors:[
+				{Error <Root must be an object.> Location:{TextRegion 1 2}}
+			]
+		}
+
+		{TestCase
+			<tyml<{!tyml} «1»a «2»{Test !ns:<http://test.de>}>tyml>
+			Errors:[
+				{Error <Root must be an object.> Location:{TextRegion 1 2}}
+			]
+		}
+	]}
+
+
+
+	{TestCases Name:<Prefix Tests> [
+
+		{TestCase
+			<tyml<{!tyml !ns:<http://test.de>}{Root}>tyml>
+		}
+
+		{TestCase
+			<tyml<{!tyml}{Root !ns:<http://test.de>}>tyml>
+		}
+
+		{TestCase
+			<tyml<{!tyml}{«1»Root«2»}>tyml>
+			Errors:[
+				{Error <The empty prefix is not defined.> Location:{TextRegion 1 2}}
+			]
+		}
+
+
+		{TestCase
+			<tyml<{!tyml !ns/p:<http://test.de>}{p/Root}>tyml>
+		}
+
+		{TestCase
+			<tyml<{!tyml}{p/Root !ns/p:<http://test.de>}>tyml>
+		}
+
+		{TestCase
+			<tyml<
+				{!tyml}{«1»p«2»/Root}
+			
+			>tyml>
+			Errors:[
+				{Error <Prefix 'p' is not defined.> Location:{TextRegion 1 2}}
+			]
+		}
+
+		{TestCase
+			<tyml<{!tyml}{«1»/«2»Root«3»}>tyml>
+			Errors:[
+				{Error <No prefix is specified.> Location:{TextPoint 1}}
+				{Error <The empty prefix is not defined.> Location:{TextRegion 2 3}}
+			]
+		}
+
+		{TestCase
+			<tyml<{!tyml}{«1»/«2»}>tyml>
+			Errors:[
+				{Error <No prefix is specified.> Location:{TextPoint 1}}
+				{Error <The empty prefix is not defined.> Location:{TextPoint 2}}
+				{Error <No name is specified.> Location:{TextPoint 2}}
+			]
+		}
+
+		{TestCase
+			<tyml<{!tyml !ns/p:<http://test.de>}{p/Root «1»!ns/p:«2»<http://test.de>}>tyml>
+			Errors:[
+				{Error <Prefix 'p' is already defined.> Location:{TextRegion 1 2}}
+			]
+		}
+
+		{TestCase
+			<tyml<{!tyml !ns:<http://test.de>}{Root !ns:<http://test.de>}>tyml>
+		}
+
+		{TestCase
+			<tyml<{!tyml}{p/Root !ns:<http://test.de> «1»!ns:«2»<http://test.de>}>tyml>
+			Errors:[
+				{Error <The empty prefix cannot be declared more than once on the same object.> Location:{TextRegion 1 2}}
+			]
+		}
+
+	]}
+
+
+]}
