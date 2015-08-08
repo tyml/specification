@@ -22,10 +22,10 @@ DocumentHeader  ::= '{!tyml' (' 1.0')?
 
 AliasDef ::= '{!alias' WS  '<#' Identifier '>' WS OrdinaryString WS?  '}'
 
-Element         ::= OrdinaryString | EscapedString | Primitive | Object | OrdinaryArray | MarkupArray
+Element         ::= OrdinaryString | HeredocString | Primitive | Object | OrdinaryArray | MarkupArray
 
 OrdinaryString  ::= '<' (OrdinaryStringCharacter | EscapeSequence)* '>'
-EscapedString   ::= ('<<' (AnyCharacter* | '\' EscapeSequence) '>>') 
+HeredocString   ::= ('<<' (AnyCharacter* | '\' EscapeSequence) '>>') 
                     | ('<' Identifier  '<' (AnyCharacter* | '\' Identifier EscapeSequence) '>' Identifier  '>')
 
 Primitive       ::= [a-zA-Z0-9_-+*=|~!?.,;/\"'()^&@%$#]+
@@ -38,5 +38,5 @@ Attribute       ::= NSIdentifier ':' WS? Element
 OrdinaryArray   ::= '[' WS? (Element (WS Element)*)? WS? ']'
 
 MarkupArray     ::= '![' MarkupElement* ']'
-MarkupElement   ::= OrdinaryString | EscapedString | Object | MarkupString
+MarkupElement   ::= OrdinaryString | HeredocString | Object | OrdinaryArray | MarkupString
 MarkupString    ::= (MarkupStringCharacter | EscapeSequence)*
