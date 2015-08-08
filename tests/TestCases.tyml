@@ -46,28 +46,68 @@
 		{TestCase
 			<tyml<{!tyml}«1»>tyml>
 			Errors:[
-				{Error <Missing root object.> Location:{TextPoint 1}}
+				{Error <A root object is missing.> Location:{TextPoint 1}}
 			]
 		}
 
 		{TestCase
 			<tyml<{!tyml} «1»>tyml>
 			Errors:[
-				{Error <Missing root object.> Location:{TextPoint 1}}
+				{Error <A root object is missing.> Location:{TextPoint 1}}
 			]
 		}
 
 		{TestCase
-			<tyml<{!tyml} «1»a «2»>tyml>
+			<tyml<{!tyml !ns:<>} {Root1} «1»{Root2}  «2»>tyml>
 			Errors:[
-				{Error <Root must be an object.> Location:{TextRegion 1 2}}
+				{Error <Expected end of document after root object.> Location:{TextRegion 1 2}}
 			]
 		}
 
 		{TestCase
-			<tyml<{!tyml} «1»a «2»{Test !ns:<http://test.de>}>tyml>
+			<tyml<{!tyml !ns:<>} {Root1} «1»primitiv {-- bla --} {Root3} {-- test --}  «2»>tyml>
 			Errors:[
-				{Error <Root must be an object.> Location:{TextRegion 1 2}}
+				{Error <Expected end of document after root object.> Location:{TextRegion 1 2}}
+			]
+		}
+
+		{TestCase
+			<tyml<{!tyml !ns:<>} «1»primitiv«2» {-- test --}  {Root1}>tyml>
+			Errors:[
+				{Error <The root element must be an object.> Location:{TextRegion 1 2}}
+			]
+		}
+
+
+		{TestCase
+			<tyml<{!tyml} «1»a«2» «3»>tyml>
+			Errors:[
+				{Error <The root element must be an object.> Location:{TextRegion 1 2}}
+				{Error <A root object is missing.> Location:{TextPoint 3}}
+			]
+		}
+
+		{TestCase
+			<tyml<{!tyml} «1»[item1 item2]«2» «3»[]«4»  «5»>tyml>
+			Errors:[
+				{Error <The root element must be an object.> Location:{TextRegion 1 2}}
+				{Error <The root element must be an object.> Location:{TextRegion 3 4}}
+				{Error <A root object is missing.> Location:{TextPoint 5}}
+			]
+		}
+
+		{TestCase
+			<tyml<{!tyml} «1»a«2» {Test !ns:<http://test.de>}>tyml>
+			Errors:[
+				{Error <The root element must be an object.> Location:{TextRegion 1 2}}
+			]
+		}
+
+		{TestCase
+			<tyml<{!tyml} «1»a«2» {Test !ns:<http://test.de>} «3»foo «4»>tyml>
+			Errors:[
+				{Error <The root element must be an object.> Location:{TextRegion 1 2}}
+				{Error <Expected end of document after root object.> Location:{TextRegion 1 2}}
 			]
 		}
 	]}
@@ -111,10 +151,9 @@
 		}
 
 		{TestCase
-			<tyml<{!tyml}{«1»/«2»Root«3»}>tyml>
+			<tyml<{!tyml}{«1»/Root}>tyml>
 			Errors:[
 				{Error <No prefix is specified.> Location:{TextPoint 1}}
-				{Error <The empty prefix is not defined.> Location:{TextRegion 2 3}}
 			]
 		}
 
@@ -122,7 +161,6 @@
 			<tyml<{!tyml}{«1»/«2»}>tyml>
 			Errors:[
 				{Error <No prefix is specified.> Location:{TextPoint 1}}
-				{Error <The empty prefix is not defined.> Location:{TextPoint 2}}
 				{Error <No name is specified.> Location:{TextPoint 2}}
 			]
 		}
@@ -146,6 +184,4 @@
 		}
 
 	]}
-
-
 ]}
