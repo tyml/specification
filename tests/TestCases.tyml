@@ -14,34 +14,81 @@
 	}
 	
 	
-	{TestCases Name:<Invalid header> [
+	{TestCases Name:<InvalidHeader> [
 
 		{TestCase
-			<tyml<{!tyml«1»>tyml>
+			<tyml<«1»{!tyml«2» «3»>tyml>
 			Errors:[
-				{Error <Expected header end element.> Location:{TextPoint 1}}
-				{Error <Missing root object.> Location:{TextPoint 1}}
+				{Error <The object is not closed.> Location:{TextRegion 1 2}}
+				{Error <The object end is missing.> Location:{TextPoint 3}}
+				{Error <A root object is missing.> Location:{TextPoint 3}}
 			]
 		}
 
 		{TestCase
 			<tyml<«1»>tyml>
 			Errors:[
-				{Error <Missing header.> Location:{TextPoint 1}}
-				{Error <Missing root object.> Location:{TextPoint 1}}
+				{Error <The header is missing.> Location:{TextPoint 1}}
+				{Error <A root object is missing.> Location:{TextPoint 1}}
+			]
+		}
+
+		{TestCase
+			<tyml<«1» «2»foo«3» «4»>tyml>
+			Errors:[
+				{Error <The header is missing.> Location:{TextPoint 1}}
+				{Error <The root element must be an object.> Location:{TextRegion 2 3}}
+				{Error <A root object is missing.> Location:{TextPoint 4}}
 			]
 		}
 
 		{TestCase
 			<tyml<«1»{p/Root !ns/p:<http://test.de>}>tyml>
 			Errors:[
-				{Error <Missing header.> Location:{TextPoint 1}}
+				{Error <The header is missing.> Location:{TextPoint 1}}
+			]
+		}
+
+		{TestCase
+			<tyml<{!tyml «1»{Foo 1.0 /test:<> «3»>tyml>
+			Errors:[
+				{Error <Invalid value for language version.> Location:{TextRegion 1 3}}
+
+				{-- The Foo object is not closed too, but syntactical errors should be marked only once. --}
+				{Error <The object is not closed.> Location:{TextPoint 3}}
+				{Error <The object end is missing.> Location:{TextPoint 3}}
+				{Error <A root object is missing.> Location:{TextPoint 3}}
+			]
+		}
+
+		{TestCase
+			<tyml<{!tyml 1.0 «1»{Foo 1.0 /test:<> }«3» «4»>tyml>
+			Errors:[
+				{Error <Invalid implicit attribute in header.> Location:{TextRegion 1 3}}
+				{Error <The object is not closed.> Location:{TextPoint 4}}
+				{Error <The object end is missing.> Location:{TextPoint 4}}
+			]
+		}
+
+		{TestCase
+			<tyml<{!tyml «1»{!tyml foo}«2»}>tyml>
+			Errors:[
+				{Error <Invalid value for language version.> Location:{TextRegion 1 2}}
+			]
+		}
+
+		{TestCase
+			<tyml<{!tyml «1»1.1«2» } 12345 {Root} {>tyml>
+			Errors:[
+				{-- Only the language version is marked as invalid (and all other errors are ignored) 
+					so that one can still edit 1.1 documents without massive error reports. --}
+				{Error <Unsupported language version. This parser can only read documents with version '1.0'.> Location:{TextRegion 1 2}}
 			]
 		}
 	]}
 
 
-	{TestCases Name:<Missing root object> [
+	{TestCases Name:<MissingRootObject> [
 
 		{TestCase
 			<tyml<{!tyml}«1»>tyml>
@@ -107,14 +154,14 @@
 			<tyml<{!tyml} «1»a«2» {Test !ns:<http://test.de>} «3»foo «4»>tyml>
 			Errors:[
 				{Error <The root element must be an object.> Location:{TextRegion 1 2}}
-				{Error <Expected end of document after root object.> Location:{TextRegion 1 2}}
+				{Error <Expected end of document after root object.> Location:{TextRegion 3 4}}
 			]
 		}
 	]}
 
 
 
-	{TestCases Name:<Prefix Tests> [
+	{TestCases Name:<Prefix> [
 
 		{TestCase
 			<tyml<{!tyml !ns:<http://test.de>}{Root}>tyml>
@@ -141,10 +188,7 @@
 		}
 
 		{TestCase
-			<tyml<
-				{!tyml}{«1»p«2»/Root}
-			
-			>tyml>
+			<tyml<{!tyml}{«1»p«2»/Root}>tyml>
 			Errors:[
 				{Error <Prefix 'p' is not defined.> Location:{TextRegion 1 2}}
 			]
@@ -177,11 +221,61 @@
 		}
 
 		{TestCase
-			<tyml<{!tyml}{p/Root !ns:<http://test.de> «1»!ns:«2»<http://test.de>}>tyml>
+			<tyml<{!tyml}{Root !ns:<http://test.de> «1»!ns:«2»<http://test.de>}>tyml>
 			Errors:[
 				{Error <The empty prefix cannot be declared more than once on the same object.> Location:{TextRegion 1 2}}
 			]
 		}
 
+
+		{TestCase
+			<tyml<{!tyml} {«1»!tyml«2» Attribute:value} >tyml>
+			Errors:[
+				{Error <The object type name cannot start with '!'.> Location:{TextRegion 1 2}}
+			]
+		}
+
+		{TestCase
+			<tyml<{!tyml} {«1»!test«2»/tyml Attribute:value} >tyml>
+			Errors:[
+				{Error <A namespace prefix cannot start with '!'.> Location:{TextRegion 1 2}}
+			]
+		}
+
+		{TestCase
+			<tyml<{!tyml} {Type !ns:<test> «1»!test«2»/Attribute:value} >tyml>
+			Errors:[
+				{Error <A namespace prefix cannot start with '!'.> Location:{TextRegion 1 2}}
+			]
+		}
+
+
+		{TestCase
+			<tyml<{!tyml} {Type !ns:<test> !ns/«1»!p«2»:<value> Attribute:value} >tyml>
+			Errors:[
+				{Error <Cannot define a namespace prefix that starts with '!'.> Location:{TextRegion 1 2}}
+			]
+		}
+
+		{TestCase
+			<tyml<{!tyml} {p/Type !ns/p: «1»{Test}«2» } >tyml>
+			Errors:[
+				{Error <The attribute value must be an ordinary string.> Location:{TextRegion 1 2}}
+			]
+		}
+	]}
+
+
+	{TestCases Name:<Object> [
+		{TestCase 
+			<tyml<{!tyml} {Object«1»[]«2»[]«3»true«4»{Object}«5»test:4}>tyml>
+			Errors:[
+				{Error <Elements within an object must be separated by whitespace.> Location:{TextPoint 1}}
+				{Error <Elements within an object must be separated by whitespace.> Location:{TextPoint 2}}
+				{Error <Elements within an object must be separated by whitespace.> Location:{TextPoint 3}}
+				{Error <Elements within an object must be separated by whitespace.> Location:{TextPoint 4}}
+				{Error <Elements within an object must be separated by whitespace.> Location:{TextPoint 5}}
+			]
+		}
 	]}
 ]}
