@@ -52,7 +52,7 @@
 		{TestCase
 			<tyml<{!tyml «1»{Foo 1.0 /test:<> «3»>tyml>
 			Errors:[
-				{Error <Invalid value for language version.> Location:{TextRegion 1 3}}
+				{Error <The language version must be a primitive.> Location:{TextRegion 1 3}}
 
 				{-- The Foo object is not closed too, but syntactical errors should be marked only once. --}
 				{Error <The object is not closed.> Location:{TextPoint 3}}
@@ -67,13 +67,16 @@
 				{Error <Invalid implicit attribute in header.> Location:{TextRegion 1 3}}
 				{Error <The object is not closed.> Location:{TextPoint 4}}
 				{Error <The object end is missing.> Location:{TextPoint 4}}
+				{Error <A root object is missing.> Location:{TextPoint 4}}
 			]
 		}
 
 		{TestCase
-			<tyml<{!tyml «1»{!tyml foo}«2»}>tyml>
+			<tyml<{!tyml «1»{!tyml foo}«2»}«4»>tyml>
 			Errors:[
-				{Error <Invalid value for language version.> Location:{TextRegion 1 2}}
+				{Error <The language version must be a primitive.> Location:{TextRegion 1 2}}
+				{Error <The object is not closed.> Location:{TextPoint 4}}
+				{Error <A root object is missing.> Location:{TextPoint 4}}
 			]
 		}
 
@@ -268,7 +271,14 @@
 
 	{TestCases Name:<Object> [
 		{TestCase 
-			<tyml<{!tyml} {Object«1»[]«2»[]«3»true«4»{Object}«5»test:4}>tyml>
+			<tyml<{!tyml !ns:<>} {Object value «1»!ns/test:«2»hallo}>tyml>
+			Errors:[
+				{Error <Namespace prefix definition must be directly after the type identifier.> Location:{TextRegion 1 2}}
+			]
+		}
+
+		{TestCase 
+			<tyml<{!tyml !ns:<>} {Object«1»[]«2»[]«3»true«4»{Object}«5»test:4}>tyml>
 			Errors:[
 				{Error <Elements within an object must be separated by whitespace.> Location:{TextPoint 1}}
 				{Error <Elements within an object must be separated by whitespace.> Location:{TextPoint 2}}
