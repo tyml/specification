@@ -150,14 +150,14 @@
                     QualifiedTypeName ::= Namespace "#" LocalTypeName
                 >>}
 
-                A TypeName consists of a prefix that is the text of the optional NonEmptyPrefix child 
+                A {Reference <TypeName>} consists of a prefix that is the text of the optional NonEmptyPrefix child 
                 and a local type name that is the text of the LocalTypeName child.
 
                 {Constraint <Well-formedness> ![
-                    A TypeName MUST NOT resolve its prefix to {Null}.
+                    A {Reference <TypeName>} MUST NOT resolve its prefix to {Null}.
                 ]}
 
-                A TypeName resolves to a QualifiedTypeName. 
+                A {Reference <TypeName>} resolves to a {Reference <QualifiedTypeName>}. 
                 It assembles the namespace the prefix is resolved to and the local type name.
 
             ]}
@@ -181,7 +181,7 @@
                 ]}
 
                 {Definition <Logical Tree> ![
-                    The constraints for syntactical correctness ensure that {Reference <Syntactically Correct>} {Reference <Tyml Document+s>} have exactly one Parse Tree.
+                    The syntactical correctness constraints ensure that {Reference <Syntactically Correct>} {Reference <Tyml Document+s>} have exactly one Parse Tree.
                     This tree is called the {Keyword <Logical Tree>} of the {Reference <Tyml Document>}.
                 ]}
 
@@ -193,15 +193,19 @@
                 {Productions <<
                     Document ::= (Header TrlTrv?) (LdTrv? AliasDef TrlTrv?)* (LdTrv? Object TrlTrv?) LdTrv?
                 >>}
-                Hence all {Reference <Syntactically Correct>} {Reference <Tyml Document+s>} consist of exactly one root object.
+
+				{Definition <Root Object> ![
+                    The Object child of Document nodes is called {Keyword <Root Object>}.
+                ]}
 
                 The document header is used for recognizing a tyml document including its version and for specifying global namespace prefixes.
+				Document nodes use the Header child for resolving prefixes.
                 The header is defined as follows:
                 {Productions <<
                     Header ::= '{!tyml 0.9' (TrlTrv LdTrv? PrefixDefinition)* TrlTrv? LdTrv? '}'
                 >>}
                 Later versions of Tyml will not change the {Reference <RecognizedAsTymlDocument>} production but will increase the header's version number.
-                For future Tyml 1.0 documents however the version will be optional.
+                For future Tyml 1.0 documents however, the version will be optional.
 
                 Alias definitions can be used to shorten object types. They are defined as follows:
                 {Productions <<
