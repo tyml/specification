@@ -1,20 +1,20 @@
 Tyml - The Typed Markup Language
 ================================
 
-Tyml is a typed markup and data description language that is meant to
-be an alternative to xml, json and yaml.
+Tyml is a text based and typed markup and data description language that is meant to
+be an alternative to XML, JSON and YAML. Tyml is the abbreviation of Typed markup language.
 
-Because tyml is typed, thus every object must specify a global type for that it describes an instance,
-tyml documents can be validated and processed easily by using associated type information.
-This allows tools that can provide domain specific assistance like autocomplete or graphical
-user interfaces for editing tyml documents.  
+Because Tyml is typed, thus every object must specify a global type for that it describes an instance,
+Tyml documents can be validated and processed easily by using associated type information.
+This allows tools that can provide domain specific assistance like autocompletion or graphical
+user interfaces for editing Tyml documents.  
 The concept of namespaces that is inspired by xml prevents type and attribute naming collisions,
 so that each tyml object can be extended by custom attributes in a custom namespace without
 neccessary influencing the processing of the document. Thus, each tyml document can be extended at will.
 
-Tyml supports to describe objects, lists, strings and primitives, 
+Tyml supports the description of objects, lists, strings and primitives, 
 whereby primitives are strings that have a user defined meaning like numbers or booleans.
-Moreover, tyml supports to embed both objects and arbitrary unmasked text into a markup string.
+Moreover, tyml supports embedding both objects and arbitrary unmasked text into a markup string.
 
 This makes tyml suitable to describe complex configurations and extensive markup documents,
 while still being appropriate to store and transmit simple data due to its compact notation.
@@ -22,9 +22,8 @@ while still being appropriate to store and transmit simple data due to its compa
 Example - Contact book
 ----------------------
 
-The following document provides an insight into the syntax of tyml and
-demonstrates by using all essential language features how tyml could be used
-to describe a simple contact book:
+The following document provides an insight into the syntax of Tyml and
+demonstrates how tyml could be used to describe a simple contact book by using all essential language features:
 
 ```tyml
 {!tyml !ns:<http://schema.tyml.org/examples/contact-book>} 
@@ -52,8 +51,9 @@ to describe a simple contact book:
 }
 ```
 
-Further examples and their xml, json and yaml equivalent can be found in the
+Further examples and their XML, JSON and YAML equivalent can be found in the
 [examples](examples) directory.
 
 Specification
 -------------
+See [SPEC.tyml](SPEC.tyml) for the specification of Tyml 0.9.

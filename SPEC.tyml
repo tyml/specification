@@ -1,0 +1,371 @@
+{!tyml 1.0}
+{Specification !ns:<tyml.org/spec/0.9>
+    Title:        <Tyml Specification 0.9 - Draft>
+
+    Content:    ![
+        {Section <Introduction> ![
+            Tyml is a text based and typed markup and data description language that is meant to
+            be an alternative to XML, JSON and YAML. Tyml is the abbreviation of Typed markup language.
+
+            Because Tyml is typed, thus every object must specify a global type for that it describes an instance,
+            Tyml documents can be validated and processed easily by using associated type information.
+            This allows tools that can provide domain specific assistance like autocompletion or graphical
+            user interfaces for editing Tyml documents.  
+            The concept of namespaces that is inspired by xml prevents type and attribute naming collisions,
+            so that each tyml object can be extended by custom attributes in a custom namespace without
+            neccessary influencing the processing of the document. Thus, each tyml document can be extended at will.
+
+            Tyml supports the description of objects, lists, strings and primitives, 
+            whereby primitives are strings that have a user defined meaning like numbers or booleans.
+            Moreover, tyml supports embedding both objects and arbitrary unmasked text into a markup string.
+
+            This makes tyml suitable to describe complex configurations and extensive markup documents,
+            while still being appropriate to store and transmit simple data due to its compact notation.
+
+ 
+            {Section <Terminology> ![
+                The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+                NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and
+                "OPTIONAL" in this document are to be interpreted as described in 
+                {Link <https://www.ietf.org/rfc/rfc2119.txt> <RFC 2119>}.
+            ]}
+            
+            {Section <Goal of this Specification> ![
+                This specification defines the formal language of Tyml, the logical tree of well-formed Tyml documents and how programs can process Tyml documents.
+            ]}
+
+            {Section <Tyml Programs> ![
+                Tyml addresses all programs that want to write or read any kind of structured data.
+
+                {Definition <Tyml Processor> ![
+                    Any program that processes {Reference <Tyml Document+s>},
+                    whether it is reading or writing, is called {Keyword <Tyml Processor>}.
+                ]}
+                {Definition <Tyml Text Editor> ![
+                    Any program that provides a textual editor for editing tyml documents by modifying characters, is called {Keyword <Tyml Text Editor>}.
+                ]}
+            ]}
+        ]}
+     
+
+        {Section <Logical Structure> ![
+
+            {Section <Notation> ![
+                In the following, the Expressive Grammar Language (EGL) 1.0 is used to describe {Reference <Productions>} that define various {Reference <Symbols>}.
+                The underlaying {Reference <Alphabet>} consists of exactly all {Reference <Unicode Printable Characters>}.
+                If a String matches a given {Reference <Symbol>}, {Reference <Parse Trees>} are yielded as described by the EGL specification.
+                These {Reference <Parse Trees>} describe all possible logical structures of the String that matched the given {Reference <Symbol>}.
+
+                When this specification names a certain symbol, it often refers to the corresponding nodes of the parse trees.
+                
+                The text of an optional child node is the text of the child node if it exists, otherwise it is the {Reference <Empty String>}.
+
+				{Null} refers to a special value that is different from every other value.
+            ]}
+            
+
+            {Section <Identifiers> ![
+                Identifiers have the following form:
+                {Productions <<
+                    Identifier          ::= IdentifierStartChar IdentifierContChar*
+                    IdentifierStartChar ::= '_' | #ID_Start
+                    IdentifierContChar  ::= '_' | '.' | '-' | #ID_Continue
+                    OptIdentifier       ::= Identifier?
+                >>}
+				{Reference <ID_Start>} and {Reference <ID_Continue>} refer to the corresponding Unicode properties.
+            ]}
+
+            {Section <Whitespaces and Comments> ![
+                Whitespace characters are described as following:
+                {Productions <<
+                    SingleLineWSChar ::= #x09 | #x20
+                    LineBreak        ::= #x0D #x0A | #x0D | #x0A
+                    WS               ::= SingleLineWSChar | LineBreak
+                >>}
+                
+                Comments have the following structure:
+                {Productions <<
+                    Comment ::= '{--' OptIdentifier WS (AnyText WS)? OptIdentifier '--}'
+                    AnyText ::= .*
+                >>}
+
+                {Constraint <Syntactical Correctness> ![
+                    The text of all {Reference <OptIdentifier>} children of a {Reference <Comment>} MUST match and is called the {Keyword <Delimeter>} of the {Reference <Comment>}.
+                    {Reference <AnyText>} children MUST NOT contain the {Reference <Delimiter>} followed by {Text <--}>}.
+                ]}
+
+                These productions form the leading and trailing trivia productions:
+                {Productions <<
+                    LdTrv  ::= (WS | Comment)+
+                    TrlTrv ::= (SingleLineWSChar | Comment)+
+                >>}
+
+                {Constraint <Syntactical Correctness> ![
+                    The text of {Reference <LdTrv>} nodes must be as long as possible 
+                    whereas the text of {Reference <TrlTrv>} nodes must be as short as possible.
+                ]}
+
+                {Definition <Trivia> ![A {Keyword <Trivia>} is a {Reference <String>} that represents a sequence of whitespace or comments.]}
+
+                
+                If a {Reference <Tyml Processor>} stores {Reference <Trivias>}, {Reference <LdTrv>} nodes SHOULD be assigned to the terminal character or node that follows the trivia.
+                {Reference <TrlTrv>} nodes SHOULD be assigned to the terminal character or node that precedes the trivia.
+
+            ]}
+
+
+            {Section <Namespace System> ![
+                Namespaces are used to avoid naming collisions. Since namespaces can become quite long, prefixes are used to shorten them:
+                {Productions <<
+                    Namespace      ::= (Identifier "/")* Identifier
+                    NonEmptyPrefix ::= Identifier
+                    Prefix         ::= NonEmptyPrefix?
+                >>}
+
+                Such namespace prefixes can be defined by {Reference <PrefixDefinition+s>} in the following way:
+                {Productions <<
+                    PrefixDefinition ::= '!ns' ('/' NonEmptyPrefix)? ':' TrlTrv? LdTrv? '<' Namespace '>'
+                >>}
+                The prefix defined by the {Reference <PrefixDefinition>} is the text of the optional NonEmptyPrefix child.
+                The namespace specified by a {Reference <PrefixDefinition>} is the text of its Namespace child.
+
+
+
+                Each node of a {Reference <Parse Tree>} resolves a prefix to either a namespace or to {Null}.
+                If not defined otherwise, a node resolves a prefix to {Null} if it does not have a parent.
+                If it has a parent, the prefix is resolved to the value the parent resolves the prefix to.
+
+                However, if the node has a {Reference <PrefixDefinition>} child that defines the prefix, 
+                the prefix is resolved to the namespace the {Reference <PrefixDefinition>} child specifies.
+
+                {Constraint <Well-formedness> ![
+                    When removing a {Reference <PrefixDefinition>} node from its {Reference <Parse Tree>},
+                    its former parent must resolve the prefix defined by the PrefixDefinition to {Null}.
+                ]}
+
+                Prefixes are used for type names:
+                {Productions <<
+                    LocalTypeName     ::= Identifier
+                    TypeName          ::= (NonEmptyPrefix '/')? LocalTypeName
+                    QualifiedTypeName ::= Namespace "#" LocalTypeName
+                >>}
+
+                A TypeName consists of a prefix that is the text of the optional NonEmptyPrefix child 
+                and a local type name that is the text of the LocalTypeName child.
+
+                {Constraint <Well-formedness> ![
+                    A TypeName MUST NOT resolve its prefix to {Null}.
+                ]}
+
+                A TypeName resolves to a QualifiedTypeName. 
+                It assembles the namespace the prefix is resolved to and the local type name.
+
+            ]}
+
+
+
+
+            {Section <Tyml Documents> ![
+
+                {Definition <Tyml Document> ![
+                    A {Reference <String>} is called a {Keyword <Tyml Document>} iff it matches the production {Reference <RecognizedAsTymlDocument>}.
+                ]}
+
+                {Productions <<
+                    RecognizedAsTymlDocument ::= '{!tyml' AnyText
+                >>}
+
+                {Definition <Syntactically Correct> ![
+                    A {Reference <Tyml Document>} is called {Keyword <Syntactically Correct>} iff it matches the production {Reference <Document>} and 
+                    there is at least one Parse Tree that fulfills all {Reference <Syntactical Correctness>} constraints given in this specification.
+                ]}
+
+                {Definition <Logical Tree> ![
+                    The constraints for syntactical correctness ensure that {Reference <Syntactically Correct>} {Reference <Tyml Document+s>} have exactly one Parse Tree.
+                    This tree is called the {Keyword <Logical Tree>} of the {Reference <Tyml Document>}.
+                ]}
+
+                {Definition <Well-formed> ![
+                    A {Reference <Syntactically Correct>} {Reference <Tyml Document>} is called {Keyword <Well-formed>} iff its 
+                    {Reference <Logical Tree>} fulfills all {Reference <Well-formedness>} constraints given in this specification.
+                ]}
+
+                {Productions <<
+                    Document ::= (Header TrlTrv?) (LdTrv? AliasDef TrlTrv?)* (LdTrv? Object TrlTrv?) LdTrv?
+                >>}
+                Hence all {Reference <Syntactically Correct>} {Reference <Tyml Document+s>} consist of exactly one root object.
+
+                The document header is used for recognizing a tyml document including its version and for specifying global namespace prefixes.
+                The header is defined as follows:
+                {Productions <<
+                    Header ::= '{!tyml 0.9' (TrlTrv LdTrv? PrefixDefinition)* TrlTrv? LdTrv? '}'
+                >>}
+                Later versions of Tyml will not change the {Reference <RecognizedAsTymlDocument>} production but will increase the header's version number.
+                For future Tyml 1.0 documents however the version will be optional.
+
+                Alias definitions can be used to shorten object types. They are defined as follows:
+                {Productions <<
+                    AliasDef  ::= '{!alias' TrlTrv LdTrv? '<#' AliasName '>' TrlTrv LdTrv? '<' TypeName '>' TrlTrv? LdTrv?  '}'
+                    AliasName ::= Identifier
+                >>}
+
+                An AliasDef defines an alias name and assigns it a qualified type name.
+
+                {Constraint <Well-formedness> ![
+                    Different AliasDefs MUST define different alias names.
+                ]}
+
+                {-- Maybe !type-alias suits better? --}
+            ]}
+            
+            {Section <Expressions> ![
+                {Reference <Expressions>} can either be literals or containers for other {Reference <Expressions>}:
+                {Productions <<
+                    Expression ::= Literal | Container
+                    Literal    ::= Primitive | OrdinaryString | HeredocString 
+                    Container  ::= Object | OrdinaryArray | MarkupArray
+                >>}
+
+                {Definition <Value of a Literal> ![Literals represent an unicode string called {Keyword <Value>}.]}
+
+                {Section <Primitives> ![
+                    Primitives represent atomic values like booleans or numbers:
+                    {Productions <<
+                        Primitive      ::= PrimitiveChar+
+                        PrimitiveChar  ::= IdentifierContChar | [+*=|~!?,;/\"'()^&@%$#]
+                    >>}
+
+                    The {Reference <Value>} of a {Reference <Primitive>} is its Text.
+                ]}
+
+                {Section <Strings> ![
+                    The following productions describe ordinary strings:
+                    {Productions <<
+                        OrdinaryString     ::= '<' (OrdinaryStringChar | EscapeSequence)* '>'
+                        OrdinaryStringChar ::= . \ ('\' | '<' | '>' | LineBreak)
+                    >>}
+
+                    The Value of an ordinary string is the concatenation of the Values from all children.
+                    The Value of an ordinary string char is its Text.
+
+                    Escape sequences are constructed as following:
+                    {Productions <<
+                        EscapeSequence     ::=  '\' (EscapedCR | EscapedLF | EscapedTab | EscapedSpecialChar | CodePointRef | IgnoredWS)
+                        EscapedCR          ::= "r"
+                        EscapedLF          ::= "n"
+                        EscapedTab         ::= "t"
+                        EscapedSpecialChar ::= [\<>{}] | '[' | ']'
+                        CodePointRef       ::= 'u' Hex Hex Hex Hex
+                        Hex                ::= [0-9A-F]
+                        IgnoredWS          ::= LineBreak SingleLineWSChar*
+                    >>}
+                    
+                    The Values of the escape sequences EscapedCR, EscapedLF and EscapedTab are the unicode characters {Text <#x0D>}, {Text <#x0A>} and {Text <#x09>}.
+                    The Value of an EscapedSpecialChar is its Text. The Value of a CodePointRef is the unicode character with the given hexadecimal codepoint.
+                    The Value of an IgnoredWS node is the empty string. 
+                    The IgnoredWS escape sequence can be used to insert line breaks and indentations into strings without changing its Value.
+
+                    The following production describes heredoc strings:
+                    {Productions <<
+                        HeredocString ::= '<' OptIdentifier  '<' (AnyText | '\' OptIdentifier EscapeSequence)* '>' OptIdentifier  '>'
+                    >>}
+
+
+                    {Constraint <Syntactical Correctness> ![
+                        The text of all {Reference <OptIdentifier>} children of a {Reference <HeredocString>} MUST match and 
+                        is called the {Keyword <Delimeter>} of the {Reference <HeredocString>}.
+                        {Reference <AnyText>} children MUST NOT contain {Text <\>>} followed by {Reference <Delimiter>} and then {Text <\>>} or 
+                        {Text <\\>} followed by {Reference <Delimiter>} and then {Text <\\>}.
+                    ]}
+
+                    The Value of an HeredocString is the concatenation of the Values from all children.
+                    The Value of an AnyText node is its Text.
+                ]}
+
+
+                {Section <Objects> ![
+                    Objects can compose other elements by using attributes. They have the following structure:
+                    {Productions <<
+                        Object  ::= '{' ObjType (TrlTrv LdTrv? PrefixDefinition)* (TrlTrv LdTrv? Attribute)* TrlTrv? LdTrv? '}'
+                        ObjType ::= CastCharacter? TypeName | '#' AliasName
+                        CastCharacter ::= '='
+                    >>}
+
+                    {Constraint <Well-formedness> ![
+                        An AliasName child of an ObjType must be defined by a corresponding AliasDef element.
+                    ]}
+
+                    Each Object has a qualified type name.
+                    If the ObjType child has a TypeName child, its qualified type name is used.
+                    Otherwise, if the ObjType has an AliasName child, the qualified type name is used that is assigned to the alias name by the corresponding AliasDef element. 
+
+
+                    Attributes are defined as follows:
+                    {Productions <<
+                        Attribute         ::= ImplicitAttribute | ExplicitAttribute
+                        ImplicitAttribute ::= Expression
+                        ExplicitAttribute ::= AttributeName ':' TrlTrv? LdTrv? Expression
+
+                    >>}
+
+                    An AttributeName is defined similar to TypeName, however its prefix can be empty:
+                    {Productions <<
+                        LocalAttrName     ::= Identifier
+                        AttributeName     ::= (Prefix '/')? LocalAttrName
+                        QualifiedAttrName ::= (Namespace | QualifiedTypeName) ":" LocalAttrName
+                    >>}
+
+                    An {Reference <AttributeName>} consists of a prefix and a local attribute name:
+                    The prefix is the text of the Prefix child if it has one, otherwise it is {Null}.
+                    The local attribute name is the text of the LocalAttrName child.
+
+                    {Constraint <Well-formedness> ![
+                        An AttributeName MUST NOT resolve its prefix to {Null} unless the prefix is {Null} itself.
+                    ]}
+
+                    An {Reference <AttributeName>} resolves to a QualifiedAttrName with a matching local attribute name.
+
+                    {Definition <Ordinary Attribute> ![
+						If the prefix of an {Reference <AttributeName>} is {Null}, its parent ExplicitAttribute is called {Keyword <Ordinary Attribute>}.
+						In this case, the qualified type name of the parent Object is used as QualifiedTypeName for the qualified attribute name.
+					]}
+                    
+                    {Definition <Attached Attribute> ![
+						Otherwise, if the prefix is not {Null}, its parent ExplicitAttribute is called {Keyword <Attached Attribute>}.
+						In that case, the namespace the prefix is resolved to is used as Namespace for the qualified attribute name.
+					]}
+                ]}
+
+                {Section <Arrays> ![
+                    
+                    There are two different types of arrays: {Reference <OrdinaryArray+s>} and {Reference <MarkupArray+s>}.
+
+                    Ordinary arrays are specified as follows:
+                    {Productions <<
+                        OrdinaryArray ::= '[' Expression? (TrlTrv LdTrv? Expression)* TrlTrv? LdTrv? ']'
+                    >>}
+
+                    The following production rules describe markup arrays:
+                    {Productions <<
+                        MarkupArray      ::= '![' Comment? (MarkupElement Comment?)* ']'
+                        MarkupElement    ::= OrdinaryString | HeredocString | Object | OrdinaryArray | MarkupString
+                        MarkupStringChar ::= Char \ ([\<>{}] | '[' | ']')
+                        MarkupString     ::= (MarkupStringChar | EscapeSequence)*
+                    >>}
+                    Hence all whitespace characters within markup arrays are interpreted as markup strings.
+                ]}
+            ]}
+
+        ]}
+
+
+        {Section <Schema> ![
+            
+        ]}
+
+
+       
+
+
+    ]
+}

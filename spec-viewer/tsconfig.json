@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "module": "system",
+        "target": "es5",
+        "noImplicitAny": true,
+        "allowUnreachableCode": false,
+        "sourceMap": true,
+		"jsx": "react",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
+    },
+    "files": [
+        "typings/index.d.ts",
+        "tyml-parser/tyml.d.ts",
+        "src/Typings.d.ts",
+        "src/app.tsx",
+        "src/types.tsx", 
+        "src/Helper/TypeSystem/AbstractTypeSystem.ts",
+        "src/Helper/TypeSystem/AnnotationBasedTypeSystem.ts",
+        "src/Helper/Annotations.ts",
+        "src/Helper/Deserializer.ts",
+        "src/console.tsx"
+    ]
+}
