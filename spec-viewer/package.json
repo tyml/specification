@@ -3,6 +3,7 @@
     "name": "app",
     "dependencies": {
       "command-line-args": "npm:command-line-args@^2.1.6",
+      "fs-extra": "npm:fs-extra@^0.30.0",
       "hashmap": "npm:hashmap@^2.0.6",
       "jquery": "npm:jquery@^2.2.4",
       "lex": "npm:lex@^1.7.9",
@@ -16,8 +17,9 @@
     "peerDependencies": {
       "assert": "github:jspm/nodelibs-assert@^0.2.0-alpha",
       "buffer": "github:jspm/nodelibs-buffer@^0.2.0-alpha",
+      "constants": "github:jspm/nodelibs-constants@^0.2.0-alpha",
       "events": "github:jspm/nodelibs-events@^0.2.0-alpha",
-      "fs": "github:jspm/nodelibs-fs@^0.1.2",
+      "fs": "github:jspm/nodelibs-fs@^0.2.0-alpha",
       "os": "github:jspm/nodelibs-os@^0.2.0-alpha",
       "path": "github:jspm/nodelibs-path@^0.2.0-alpha",
       "process": "github:jspm/nodelibs-process@^0.2.0-alpha",

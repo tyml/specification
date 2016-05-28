@@ -27,8 +27,10 @@ SystemJS.config({
     "assert": "github:jspm/nodelibs-assert@0.2.0-alpha",
     "buffer": "github:jspm/nodelibs-buffer@0.2.0-alpha",
     "command-line-args": "npm:command-line-args@2.1.6",
+    "constants": "github:jspm/nodelibs-constants@0.2.0-alpha",
     "events": "github:jspm/nodelibs-events@0.2.0-alpha",
-    "fs": "github:jspm/nodelibs-fs@0.1.2",
+    "fs": "github:jspm/nodelibs-fs@0.2.0-alpha",
+    "fs-extra": "npm:fs-extra@0.30.0",
     "hashmap": "npm:hashmap@2.0.6",
     "jquery": "npm:jquery@2.2.4",
     "lex": "npm:lex@1.7.9",
@@ -72,6 +74,12 @@ SystemJS.config({
     "npm:array-back@1.0.3": {
       "map": {
         "typical": "npm:typical@2.4.2"
+      }
+    },
+    "npm:brace-expansion@1.1.4": {
+      "map": {
+        "balanced-match": "npm:balanced-match@0.4.1",
+        "concat-map": "npm:concat-map@0.0.1"
       }
     },
     "npm:buffer@4.6.0": {
@@ -146,6 +154,35 @@ SystemJS.config({
         "test-value": "npm:test-value@2.0.0"
       }
     },
+    "npm:fs-extra@0.30.0": {
+      "map": {
+        "graceful-fs": "npm:graceful-fs@4.1.4",
+        "jsonfile": "npm:jsonfile@2.3.1",
+        "klaw": "npm:klaw@1.2.0",
+        "path-is-absolute": "npm:path-is-absolute@1.0.0",
+        "rimraf": "npm:rimraf@2.5.2"
+      }
+    },
+    "npm:glob@7.0.3": {
+      "map": {
+        "inflight": "npm:inflight@1.0.5",
+        "inherits": "npm:inherits@2.0.1",
+        "minimatch": "npm:minimatch@3.0.0",
+        "once": "npm:once@1.3.3",
+        "path-is-absolute": "npm:path-is-absolute@1.0.0"
+      }
+    },
+    "npm:inflight@1.0.5": {
+      "map": {
+        "once": "npm:once@1.3.3",
+        "wrappy": "npm:wrappy@1.0.2"
+      }
+    },
+    "npm:minimatch@3.0.0": {
+      "map": {
+        "brace-expansion": "npm:brace-expansion@1.1.4"
+      }
+    },
     "npm:object-tools@2.0.6": {
       "map": {
         "array-back": "npm:array-back@1.0.3",
@@ -153,6 +190,11 @@ SystemJS.config({
         "object-get": "npm:object-get@2.0.4",
         "test-value": "npm:test-value@1.1.0",
         "typical": "npm:typical@2.4.2"
+      }
+    },
+    "npm:once@1.3.3": {
+      "map": {
+        "wrappy": "npm:wrappy@1.0.2"
       }
     },
     "npm:react@0.14.7": {
@@ -169,6 +211,11 @@ SystemJS.config({
         "process-nextick-args": "npm:process-nextick-args@1.0.7",
         "string_decoder": "npm:string_decoder@0.10.31",
         "util-deprecate": "npm:util-deprecate@1.0.2"
+      }
+    },
+    "npm:rimraf@2.5.2": {
+      "map": {
+        "glob": "npm:glob@7.0.3"
       }
     },
     "npm:stream-browserify@2.0.1": {

@@ -1,0 +1,327 @@
+<html><head><link rel="stylesheet" href="style.css"/></head><body><div id="root"><h1>Tyml Specification 0.9 - Draft</h1><p><span>        
+</span></p><h2> <span>Introduction</span> </h2><p><span>            Tyml is a text based and typed markup and data description language that is meant to
+</span><span>            be an alternative to XML, JSON and YAML. Tyml is the abbreviation of Typed markup language.
+</span></p><p><span>            Because Tyml is typed, thus every object must specify a global type for that it describes an instance,
+</span><span>            Tyml documents can be validated and processed easily by using associated type information.
+</span><span>            This allows tools that can provide domain specific assistance like autocompletion or graphical
+</span><span>            user interfaces for editing Tyml documents.  
+</span><br/><span>            The concept of namespaces that is inspired by xml prevents type and attribute naming collisions,
+</span><span>            so that each tyml object can be extended by custom attributes in a custom namespace without
+</span><span>            neccessary influencing the processing of the document. Thus, each tyml document can be extended at will.
+</span></p><p><span>            Tyml supports the description of objects, lists, strings and primitives, 
+</span><span>            whereby primitives are strings that have a user defined meaning like numbers or booleans.
+</span><span>            Moreover, tyml supports embedding both objects and arbitrary unmasked text into a markup string.
+</span></p><p><span>            This makes tyml suitable to describe complex configurations and extensive markup documents,
+</span><span>            while still being appropriate to store and transmit simple data due to its compact notation.
+</span></p><p><span>            
+</span></p><h3> <span>Terminology</span> </h3><span>                The key words &quot;MUST&quot;, &quot;MUST NOT&quot;, &quot;REQUIRED&quot;, &quot;SHALL&quot;, &quot;SHALL
+</span><span>                NOT&quot;, &quot;SHOULD&quot;, &quot;SHOULD NOT&quot;, &quot;RECOMMENDED&quot;,  &quot;MAY&quot;, and
+</span><span>                &quot;OPTIONAL&quot; in this document are to be interpreted as described in 
+</span><span>                
+</span><a href="https://www.ietf.org/rfc/rfc2119.txt"><span>RFC 2119</span></a><span>.
+</span><span>            
+</span><p><span>            
+</span></p><h3> <span>Goal of this Specification</span> </h3><span>                This specification defines the formal language of Tyml, the logical tree of well-formed Tyml documents and how programs can process Tyml documents.
+</span><span>            
+</span><p><span>            
+</span></p><h3> <span>Tyml Programs</span> </h3><p><span>                Tyml addresses all programs that want to write or read any kind of structured data.
+</span></p><p><span>                
+</span></p><div class="panel definition"><div class="panel-heading">Definition: Tyml Processor</div><div class="panel-body"><span>                    Any program that processes 
+</span><span class="reference">Tyml Document+s</span><span>,
+</span><span>                    whether it is reading or writing, is called 
+</span><span class="keyword">Tyml Processor</span><span>.
+</span><span>                
+</span></div></div><p><span>                
+</span></p><div class="panel definition"><div class="panel-heading">Definition: Tyml Text Editor</div><div class="panel-body"><span>                    Any program that provides a textual editor for editing tyml documents by modifying characters, is called 
+</span><span class="keyword">Tyml Text Editor</span><span>.
+</span><span>                
+</span></div></div><p><span>            
+</span></p><p><span>        
+</span></p><p><span>        
+</span></p><h2> <span>Logical Structure</span> </h2><p><span>            
+</span></p><h3> <span>Notation</span> </h3><p><span>                In the following, the Expressive Grammar Language (EGL) 1.0 is used to describe 
+</span><span class="reference">Productions</span><span> that define various 
+</span><span class="reference">Symbols</span><span>.
+</span><span>                The underlaying 
+</span><span class="reference">Alphabet</span><span> consists of exactly all 
+</span><span class="reference">Unicode Printable Characters</span><span>.
+</span><span>                If a String matches a given 
+</span><span class="reference">Symbol</span><span>, 
+</span><span class="reference">Parse Trees</span><span> are yielded as described by the EGL specification.
+</span><span>                These 
+</span><span class="reference">Parse Trees</span><span> describe all possible logical structures of the String that matched the given 
+</span><span class="reference">Symbol</span><span>.
+</span></p><p><span>                When this specification names a certain symbol, it often refers to the corresponding nodes of the parse trees.
+</span></p><p><span>                The text of an optional child node is the text of the child node if it exists, otherwise it is the 
+</span><span class="reference">Empty String</span><span>.
+</span></p><p><span>				
+</span><span class="null">Null</span><span> refers to a special value that is different from every other value.
+</span><span>            
+</span></p><p><span>            
+</span></p><h3> <span>Identifiers</span> </h3><p><span>                Identifiers have the following form:
+</span><span>                
+</span></p><div class="productions"><a class="token-DefinedIdentifier" id="identifier" href="#identifier">Identifier</a><span class="token-WS">          </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><a class="token-Identifier" href="#identifierstartchar">IdentifierStartChar</a><span class="token-WS"> </span><a class="token-Identifier" href="#identifiercontchar">IdentifierContChar</a><span class="token-Star">*</span><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="identifierstartchar" href="#identifierstartchar">IdentifierStartChar</a><span class="token-WS"> </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">_</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><span class="token-UnicodePropertyRef">#</span><a class="token-Identifier" href="#id_start">ID_Start</a><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="identifiercontchar" href="#identifiercontchar">IdentifierContChar</a><span class="token-WS">  </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">_</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">.</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">-</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><span class="token-UnicodePropertyRef">#</span><a class="token-Identifier" href="#id_continue">ID_Continue</a><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="optidentifier" href="#optidentifier">OptIdentifier</a><span class="token-WS">       </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><a class="token-Identifier" href="#identifier">Identifier</a><span class="token-Opt">?</span></div><p><span>				
+</span><span class="reference">ID_Start</span><span> and 
+</span><span class="reference">ID_Continue</span><span> refer to the corresponding Unicode properties.
+</span><span>            
+</span></p><p><span>            
+</span></p><h3> <span>Whitespaces and Comments</span> </h3><p><span>                Whitespace characters are described as following:
+</span><span>                
+</span></p><div class="productions"><a class="token-DefinedIdentifier" id="singlelinewschar" href="#singlelinewschar">SingleLineWSChar</a><span class="token-WS"> </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-UnicodePropertyRef">#</span><a class="token-Identifier" href="#x09">x09</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><span class="token-UnicodePropertyRef">#</span><a class="token-Identifier" href="#x20">x20</a><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="linebreak" href="#linebreak">LineBreak</a><span class="token-WS">        </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-UnicodePropertyRef">#</span><a class="token-Identifier" href="#x0d">x0D</a><span class="token-WS"> </span><span class="token-UnicodePropertyRef">#</span><a class="token-Identifier" href="#x0a">x0A</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><span class="token-UnicodePropertyRef">#</span><a class="token-Identifier" href="#x0d">x0D</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><span class="token-UnicodePropertyRef">#</span><a class="token-Identifier" href="#x0a">x0A</a><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="ws" href="#ws">WS</a><span class="token-WS">               </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><a class="token-Identifier" href="#singlelinewschar">SingleLineWSChar</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><a class="token-Identifier" href="#linebreak">LineBreak</a></div><p><span>                Comments have the following structure:
+</span><span>                
+</span></p><div class="productions"><a class="token-DefinedIdentifier" id="comment" href="#comment">Comment</a><span class="token-WS"> </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">{--</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><a class="token-Identifier" href="#optidentifier">OptIdentifier</a><span class="token-WS"> </span><a class="token-Identifier" href="#ws">WS</a><span class="token-WS"> </span><span class="token-OpenParen">(</span><a class="token-Identifier" href="#anytext">AnyText</a><span class="token-WS"> </span><a class="token-Identifier" href="#ws">WS</a><span class="token-CloseParen">)</span><span class="token-Opt">?</span><span class="token-WS"> </span><a class="token-Identifier" href="#optidentifier">OptIdentifier</a><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">--}</span><span class="token-StringEnd">&#x27;</span><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="anytext" href="#anytext">AnyText</a><span class="token-WS"> </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-SingleChar">.</span><span class="token-Star">*</span></div><p><span>                
+</span></p><div class="panel constraint"><div class="panel-heading">Constraint: Syntactical Correctness</div><div class="panel-body"><span>                    The text of all 
+</span><span class="reference">OptIdentifier</span><span> children of a 
+</span><span class="reference">Comment</span><span> MUST match and is called the 
+</span><span class="keyword">Delimeter</span><span> of the 
+</span><span class="reference">Comment</span><span>.
+</span><span>                    
+</span><span class="reference">AnyText</span><span> children MUST NOT contain the 
+</span><span class="reference">Delimiter</span><span> followed by 
+</span><span class="text">--}</span><span>.
+</span><span>                
+</span></div></div><p><span>                These productions form the leading and trailing trivia productions:
+</span><span>                
+</span></p><div class="productions"><a class="token-DefinedIdentifier" id="ldtrv" href="#ldtrv">LdTrv</a><span class="token-WS">  </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-OpenParen">(</span><a class="token-Identifier" href="#ws">WS</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><a class="token-Identifier" href="#comment">Comment</a><span class="token-CloseParen">)</span><span class="token-PosStar">+</span><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="trltrv" href="#trltrv">TrlTrv</a><span class="token-WS"> </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-OpenParen">(</span><a class="token-Identifier" href="#singlelinewschar">SingleLineWSChar</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><a class="token-Identifier" href="#comment">Comment</a><span class="token-CloseParen">)</span><span class="token-PosStar">+</span></div><p><span>                
+</span></p><div class="panel constraint"><div class="panel-heading">Constraint: Syntactical Correctness</div><div class="panel-body"><span>                    The text of 
+</span><span class="reference">LdTrv</span><span> nodes must be as long as possible 
+</span><span>                    whereas the text of 
+</span><span class="reference">TrlTrv</span><span> nodes must be as short as possible.
+</span><span>                
+</span></div></div><p><span>                
+</span></p><div class="panel definition"><div class="panel-heading">Definition: Trivia</div><div class="panel-body"><span>A 
+</span><span class="keyword">Trivia</span><span> is a 
+</span><span class="reference">String</span><span> that represents a sequence of whitespace or comments.
+</span></div></div><p><span>                If a 
+</span><span class="reference">Tyml Processor</span><span> stores 
+</span><span class="reference">Trivias</span><span>, 
+</span><span class="reference">LdTrv</span><span> nodes SHOULD be assigned to the terminal character or node that follows the trivia.
+</span><span>                
+</span><span class="reference">TrlTrv</span><span> nodes SHOULD be assigned to the terminal character or node that precedes the trivia.
+</span></p><p><span>            
+</span></p><p><span>            
+</span></p><h3> <span>Namespace System</span> </h3><p><span>                Namespaces are used to avoid naming collisions. Since namespaces can become quite long, prefixes are used to shorten them:
+</span><span>                
+</span></p><div class="productions"><a class="token-DefinedIdentifier" id="namespace" href="#namespace">Namespace</a><span class="token-WS">      </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-OpenParen">(</span><a class="token-Identifier" href="#identifier">Identifier</a><span class="token-WS"> </span><span class="token-StringStart">&quot;</span><span class="token-String">/</span><span class="token-StringEnd">&quot;</span><span class="token-CloseParen">)</span><span class="token-Star">*</span><span class="token-WS"> </span><a class="token-Identifier" href="#identifier">Identifier</a><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="nonemptyprefix" href="#nonemptyprefix">NonEmptyPrefix</a><span class="token-WS"> </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><a class="token-Identifier" href="#identifier">Identifier</a><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="prefix" href="#prefix">Prefix</a><span class="token-WS">         </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><a class="token-Identifier" href="#nonemptyprefix">NonEmptyPrefix</a><span class="token-Opt">?</span></div><p><span>                Such namespace prefixes can be defined by 
+</span><span class="reference">PrefixDefinition+s</span><span> in the following way:
+</span><span>                
+</span></p><div class="productions"><a class="token-DefinedIdentifier" id="prefixdefinition" href="#prefixdefinition">PrefixDefinition</a><span class="token-WS"> </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">!ns</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><span class="token-OpenParen">(</span><span class="token-StringStart">&#x27;</span><span class="token-String">/</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><a class="token-Identifier" href="#nonemptyprefix">NonEmptyPrefix</a><span class="token-CloseParen">)</span><span class="token-Opt">?</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">:</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><a class="token-Identifier" href="#trltrv">TrlTrv</a><span class="token-Opt">?</span><span class="token-WS"> </span><a class="token-Identifier" href="#ldtrv">LdTrv</a><span class="token-Opt">?</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">&lt;</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><a class="token-Identifier" href="#namespace">Namespace</a><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">&gt;</span><span class="token-StringEnd">&#x27;</span></div><p><span>                The prefix defined by the 
+</span><span class="reference">PrefixDefinition</span><span> is the text of the optional NonEmptyPrefix child.
+</span><span>                The namespace specified by a 
+</span><span class="reference">PrefixDefinition</span><span> is the text of its Namespace child.
+</span></p><p><span>                Each node of a 
+</span><span class="reference">Parse Tree</span><span> resolves a prefix to either a namespace or to 
+</span><span class="null">Null</span><span>.
+</span><span>                If not defined otherwise, a node resolves a prefix to 
+</span><span class="null">Null</span><span> if it does not have a parent.
+</span><span>                If it has a parent, the prefix is resolved to the value the parent resolves the prefix to.
+</span></p><p><span>                However, if the node has a 
+</span><span class="reference">PrefixDefinition</span><span> child that defines the prefix, 
+</span><span>                the prefix is resolved to the namespace the 
+</span><span class="reference">PrefixDefinition</span><span> child specifies.
+</span></p><p><span>                
+</span></p><div class="panel constraint"><div class="panel-heading">Constraint: Well-formedness</div><div class="panel-body"><span>                    When removing a 
+</span><span class="reference">PrefixDefinition</span><span> node from its 
+</span><span class="reference">Parse Tree</span><span>,
+</span><span>                    its former parent must resolve the prefix defined by the PrefixDefinition to 
+</span><span class="null">Null</span><span>.
+</span><span>                
+</span></div></div><p><span>                Prefixes are used for type names:
+</span><span>                
+</span></p><div class="productions"><a class="token-DefinedIdentifier" id="localtypename" href="#localtypename">LocalTypeName</a><span class="token-WS">     </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><a class="token-Identifier" href="#identifier">Identifier</a><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="typename" href="#typename">TypeName</a><span class="token-WS">          </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-OpenParen">(</span><a class="token-Identifier" href="#nonemptyprefix">NonEmptyPrefix</a><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">/</span><span class="token-StringEnd">&#x27;</span><span class="token-CloseParen">)</span><span class="token-Opt">?</span><span class="token-WS"> </span><a class="token-Identifier" href="#localtypename">LocalTypeName</a><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="qualifiedtypename" href="#qualifiedtypename">QualifiedTypeName</a><span class="token-WS"> </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><a class="token-Identifier" href="#namespace">Namespace</a><span class="token-WS"> </span><span class="token-StringStart">&quot;</span><span class="token-String">#</span><span class="token-StringEnd">&quot;</span><span class="token-WS"> </span><a class="token-Identifier" href="#localtypename">LocalTypeName</a></div><p><span>                A TypeName consists of a prefix that is the text of the optional NonEmptyPrefix child 
+</span><span>                and a local type name that is the text of the LocalTypeName child.
+</span></p><p><span>                
+</span></p><div class="panel constraint"><div class="panel-heading">Constraint: Well-formedness</div><div class="panel-body"><span>                    A TypeName MUST NOT resolve its prefix to 
+</span><span class="null">Null</span><span>.
+</span><span>                
+</span></div></div><p><span>                A TypeName resolves to a QualifiedTypeName. 
+</span><span>                It assembles the namespace the prefix is resolved to and the local type name.
+</span></p><p><span>            
+</span></p><p><span>            
+</span></p><h3> <span>Tyml Documents</span> </h3><p><span>                
+</span></p><div class="panel definition"><div class="panel-heading">Definition: Tyml Document</div><div class="panel-body"><span>                    A 
+</span><span class="reference">String</span><span> is called a 
+</span><span class="keyword">Tyml Document</span><span> iff it matches the production 
+</span><span class="reference">RecognizedAsTymlDocument</span><span>.
+</span><span>                
+</span></div></div><p><span>                
+</span></p><div class="productions"><a class="token-DefinedIdentifier" id="recognizedastymldocument" href="#recognizedastymldocument">RecognizedAsTymlDocument</a><span class="token-WS"> </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">{!tyml</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><a class="token-Identifier" href="#anytext">AnyText</a></div><p><span>                
+</span></p><div class="panel definition"><div class="panel-heading">Definition: Syntactically Correct</div><div class="panel-body"><span>                    A 
+</span><span class="reference">Tyml Document</span><span> is called 
+</span><span class="keyword">Syntactically Correct</span><span> iff it matches the production 
+</span><span class="reference">Document</span><span> and 
+</span><span>                    there is at least one Parse Tree that fulfills all 
+</span><span class="reference">Syntactical Correctness</span><span> constraints given in this specification.
+</span><span>                
+</span></div></div><p><span>                
+</span></p><div class="panel definition"><div class="panel-heading">Definition: Logical Tree</div><div class="panel-body"><span>                    The constraints for syntactical correctness ensure that 
+</span><span class="reference">Syntactically Correct</span><span> 
+</span><span class="reference">Tyml Document+s</span><span> have exactly one Parse Tree.
+</span><span>                    This tree is called the 
+</span><span class="keyword">Logical Tree</span><span> of the 
+</span><span class="reference">Tyml Document</span><span>.
+</span><span>                
+</span></div></div><p><span>                
+</span></p><div class="panel definition"><div class="panel-heading">Definition: Well-formed</div><div class="panel-body"><span>                    A 
+</span><span class="reference">Syntactically Correct</span><span> 
+</span><span class="reference">Tyml Document</span><span> is called 
+</span><span class="keyword">Well-formed</span><span> iff its 
+</span><span>                    
+</span><span class="reference">Logical Tree</span><span> fulfills all 
+</span><span class="reference">Well-formedness</span><span> constraints given in this specification.
+</span><span>                
+</span></div></div><p><span>                
+</span></p><div class="productions"><a class="token-DefinedIdentifier" id="document" href="#document">Document</a><span class="token-WS"> </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-OpenParen">(</span><a class="token-Identifier" href="#header">Header</a><span class="token-WS"> </span><a class="token-Identifier" href="#trltrv">TrlTrv</a><span class="token-Opt">?</span><span class="token-CloseParen">)</span><span class="token-WS"> </span><span class="token-OpenParen">(</span><a class="token-Identifier" href="#ldtrv">LdTrv</a><span class="token-Opt">?</span><span class="token-WS"> </span><a class="token-Identifier" href="#aliasdef">AliasDef</a><span class="token-WS"> </span><a class="token-Identifier" href="#trltrv">TrlTrv</a><span class="token-Opt">?</span><span class="token-CloseParen">)</span><span class="token-Star">*</span><span class="token-WS"> </span><span class="token-OpenParen">(</span><a class="token-Identifier" href="#ldtrv">LdTrv</a><span class="token-Opt">?</span><span class="token-WS"> </span><a class="token-Identifier" href="#object">Object</a><span class="token-WS"> </span><a class="token-Identifier" href="#trltrv">TrlTrv</a><span class="token-Opt">?</span><span class="token-CloseParen">)</span><span class="token-WS"> </span><a class="token-Identifier" href="#ldtrv">LdTrv</a><span class="token-Opt">?</span></div><p><span>                Hence all 
+</span><span class="reference">Syntactically Correct</span><span> 
+</span><span class="reference">Tyml Document+s</span><span> consist of exactly one root object.
+</span></p><p><span>                The document header is used for recognizing a tyml document including its version and for specifying global namespace prefixes.
+</span><span>                The header is defined as follows:
+</span><span>                
+</span></p><div class="productions"><a class="token-DefinedIdentifier" id="header" href="#header">Header</a><span class="token-WS"> </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">{!tyml 0.9</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><span class="token-OpenParen">(</span><a class="token-Identifier" href="#trltrv">TrlTrv</a><span class="token-WS"> </span><a class="token-Identifier" href="#ldtrv">LdTrv</a><span class="token-Opt">?</span><span class="token-WS"> </span><a class="token-Identifier" href="#prefixdefinition">PrefixDefinition</a><span class="token-CloseParen">)</span><span class="token-Star">*</span><span class="token-WS"> </span><a class="token-Identifier" href="#trltrv">TrlTrv</a><span class="token-Opt">?</span><span class="token-WS"> </span><a class="token-Identifier" href="#ldtrv">LdTrv</a><span class="token-Opt">?</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">}</span><span class="token-StringEnd">&#x27;</span></div><p><span>                Later versions of Tyml will not change the 
+</span><span class="reference">RecognizedAsTymlDocument</span><span> production but will increase the header&#x27;s version number.
+</span><span>                For future Tyml 1.0 documents however the version will be optional.
+</span></p><p><span>                Alias definitions can be used to shorten object types. They are defined as follows:
+</span><span>                
+</span></p><div class="productions"><a class="token-DefinedIdentifier" id="aliasdef" href="#aliasdef">AliasDef</a><span class="token-WS">  </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">{!alias</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><a class="token-Identifier" href="#trltrv">TrlTrv</a><span class="token-WS"> </span><a class="token-Identifier" href="#ldtrv">LdTrv</a><span class="token-Opt">?</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">&lt;#</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><a class="token-Identifier" href="#aliasname">AliasName</a><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">&gt;</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><a class="token-Identifier" href="#trltrv">TrlTrv</a><span class="token-WS"> </span><a class="token-Identifier" href="#ldtrv">LdTrv</a><span class="token-Opt">?</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">&lt;</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><a class="token-Identifier" href="#typename">TypeName</a><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">&gt;</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><a class="token-Identifier" href="#trltrv">TrlTrv</a><span class="token-Opt">?</span><span class="token-WS"> </span><a class="token-Identifier" href="#ldtrv">LdTrv</a><span class="token-Opt">?</span><span class="token-WS">  </span><span class="token-StringStart">&#x27;</span><span class="token-String">}</span><span class="token-StringEnd">&#x27;</span><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="aliasname" href="#aliasname">AliasName</a><span class="token-WS"> </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><a class="token-Identifier" href="#identifier">Identifier</a></div><p><span>                An AliasDef defines an alias name and assigns it a qualified type name.
+</span></p><p><span>                
+</span></p><div class="panel constraint"><div class="panel-heading">Constraint: Well-formedness</div><div class="panel-body"><span>                    Different AliasDefs MUST define different alias names.
+</span><span>                
+</span></div></div><p><span>            
+</span></p><p><span>            
+</span></p><h3> <span>Expressions</span> </h3><p><span>                
+</span><span class="reference">Expressions</span><span> can either be literals or containers for other 
+</span><span class="reference">Expressions</span><span>:
+</span><span>                
+</span></p><div class="productions"><a class="token-DefinedIdentifier" id="expression" href="#expression">Expression</a><span class="token-WS"> </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><a class="token-Identifier" href="#literal">Literal</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><a class="token-Identifier" href="#container">Container</a><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="literal" href="#literal">Literal</a><span class="token-WS">    </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><a class="token-Identifier" href="#primitive">Primitive</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><a class="token-Identifier" href="#ordinarystring">OrdinaryString</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><a class="token-Identifier" href="#heredocstring">HeredocString</a><span class="token-WS"> 
+</span><a class="token-DefinedIdentifier" id="container" href="#container">Container</a><span class="token-WS">  </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><a class="token-Identifier" href="#object">Object</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><a class="token-Identifier" href="#ordinaryarray">OrdinaryArray</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><a class="token-Identifier" href="#markuparray">MarkupArray</a></div><p><span>                
+</span></p><div class="panel definition"><div class="panel-heading">Definition: Value of a Literal</div><div class="panel-body"><span>Literals represent an unicode string called 
+</span><span class="keyword">Value</span><span>.
+</span></div></div><p><span>                
+</span></p><h4> <span>Primitives</span> </h4><p><span>                    Primitives represent atomic values like booleans or numbers:
+</span><span>                    
+</span></p><div class="productions"><a class="token-DefinedIdentifier" id="primitive" href="#primitive">Primitive</a><span class="token-WS">      </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><a class="token-Identifier" href="#primitivechar">PrimitiveChar</a><span class="token-PosStar">+</span><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="primitivechar" href="#primitivechar">PrimitiveChar</a><span class="token-WS">  </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><a class="token-Identifier" href="#identifiercontchar">IdentifierContChar</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><span class="token-RangeStart">[</span><span class="token-String">+</span><span class="token-String">*</span><span class="token-String">=</span><span class="token-String">|</span><span class="token-String">~</span><span class="token-String">!</span><span class="token-String">?</span><span class="token-String">,</span><span class="token-String">;</span><span class="token-String">/</span><span class="token-String">\</span><span class="token-String">&quot;</span><span class="token-String">&#x27;</span><span class="token-String">(</span><span class="token-String">)</span><span class="token-String">^</span><span class="token-String">&amp;</span><span class="token-String">@</span><span class="token-String">%</span><span class="token-String">$</span><span class="token-String">#</span><span class="token-RangeEnd">]</span></div><p><span>                    The 
+</span><span class="reference">Value</span><span> of a 
+</span><span class="reference">Primitive</span><span> is its Text.
+</span><span>                
+</span></p><p><span>                
+</span></p><h4> <span>Strings</span> </h4><p><span>                    The following productions describe ordinary strings:
+</span><span>                    
+</span></p><div class="productions"><a class="token-DefinedIdentifier" id="ordinarystring" href="#ordinarystring">OrdinaryString</a><span class="token-WS">     </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">&lt;</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><span class="token-OpenParen">(</span><a class="token-Identifier" href="#ordinarystringchar">OrdinaryStringChar</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><a class="token-Identifier" href="#escapesequence">EscapeSequence</a><span class="token-CloseParen">)</span><span class="token-Star">*</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">&gt;</span><span class="token-StringEnd">&#x27;</span><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="ordinarystringchar" href="#ordinarystringchar">OrdinaryStringChar</a><span class="token-WS"> </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-SingleChar">.</span><span class="token-WS"> </span><span class="token-Without">\</span><span class="token-WS"> </span><span class="token-OpenParen">(</span><span class="token-StringStart">&#x27;</span><span class="token-String">\</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">&lt;</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">&gt;</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><a class="token-Identifier" href="#linebreak">LineBreak</a><span class="token-CloseParen">)</span></div><p><span>                    The Value of an ordinary string is the concatenation of the Values from all children.
+</span><span>                    The Value of an ordinary string char is its Text.
+</span></p><p><span>                    Escape sequences are constructed as following:
+</span><span>                    
+</span></p><div class="productions"><a class="token-DefinedIdentifier" id="escapesequence" href="#escapesequence">EscapeSequence</a><span class="token-WS">     </span><span class="token-ProdDef">::=</span><span class="token-WS">  </span><span class="token-StringStart">&#x27;</span><span class="token-String">\</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><span class="token-OpenParen">(</span><a class="token-Identifier" href="#escapedcr">EscapedCR</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><a class="token-Identifier" href="#escapedlf">EscapedLF</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><a class="token-Identifier" href="#escapedtab">EscapedTab</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><a class="token-Identifier" href="#escapedspecialchar">EscapedSpecialChar</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><a class="token-Identifier" href="#codepointref">CodePointRef</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><a class="token-Identifier" href="#ignoredws">IgnoredWS</a><span class="token-CloseParen">)</span><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="escapedcr" href="#escapedcr">EscapedCR</a><span class="token-WS">          </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-StringStart">&quot;</span><span class="token-String">r</span><span class="token-StringEnd">&quot;</span><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="escapedlf" href="#escapedlf">EscapedLF</a><span class="token-WS">          </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-StringStart">&quot;</span><span class="token-String">n</span><span class="token-StringEnd">&quot;</span><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="escapedtab" href="#escapedtab">EscapedTab</a><span class="token-WS">         </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-StringStart">&quot;</span><span class="token-String">t</span><span class="token-StringEnd">&quot;</span><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="escapedspecialchar" href="#escapedspecialchar">EscapedSpecialChar</a><span class="token-WS"> </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-RangeStart">[</span><span class="token-String">\</span><span class="token-String">&lt;</span><span class="token-String">&gt;</span><span class="token-String">{</span><span class="token-String">}</span><span class="token-RangeEnd">]</span><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">[</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">]</span><span class="token-StringEnd">&#x27;</span><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="codepointref" href="#codepointref">CodePointRef</a><span class="token-WS">       </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">u</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><a class="token-Identifier" href="#hex">Hex</a><span class="token-WS"> </span><a class="token-Identifier" href="#hex">Hex</a><span class="token-WS"> </span><a class="token-Identifier" href="#hex">Hex</a><span class="token-WS"> </span><a class="token-Identifier" href="#hex">Hex</a><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="hex" href="#hex">Hex</a><span class="token-WS">                </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-RangeStart">[</span><span class="token-String">0</span><span class="token-Range">-</span><span class="token-String">9</span><span class="token-String">A</span><span class="token-Range">-</span><span class="token-String">F</span><span class="token-RangeEnd">]</span><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="ignoredws" href="#ignoredws">IgnoredWS</a><span class="token-WS">          </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><a class="token-Identifier" href="#linebreak">LineBreak</a><span class="token-WS"> </span><a class="token-Identifier" href="#singlelinewschar">SingleLineWSChar</a><span class="token-Star">*</span></div><p><span>                    The Values of the escape sequences EscapedCR, EscapedLF and EscapedTab are the unicode characters 
+</span><span class="text">#x0D</span><span>, 
+</span><span class="text">#x0A</span><span> and 
+</span><span class="text">#x09</span><span>.
+</span><span>                    The Value of an EscapedSpecialChar is its Text. The Value of a CodePointRef is the unicode character with the given hexadecimal codepoint.
+</span><span>                    The Value of an IgnoredWS node is the empty string. 
+</span><span>                    The IgnoredWS escape sequence can be used to insert line breaks and indentations into strings without changing its Value.
+</span></p><p><span>                    The following production describes heredoc strings:
+</span><span>                    
+</span></p><div class="productions"><a class="token-DefinedIdentifier" id="heredocstring" href="#heredocstring">HeredocString</a><span class="token-WS"> </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">&lt;</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><a class="token-Identifier" href="#optidentifier">OptIdentifier</a><span class="token-WS">  </span><span class="token-StringStart">&#x27;</span><span class="token-String">&lt;</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><span class="token-OpenParen">(</span><a class="token-Identifier" href="#anytext">AnyText</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">\</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><a class="token-Identifier" href="#optidentifier">OptIdentifier</a><span class="token-WS"> </span><a class="token-Identifier" href="#escapesequence">EscapeSequence</a><span class="token-CloseParen">)</span><span class="token-Star">*</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">&gt;</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><a class="token-Identifier" href="#optidentifier">OptIdentifier</a><span class="token-WS">  </span><span class="token-StringStart">&#x27;</span><span class="token-String">&gt;</span><span class="token-StringEnd">&#x27;</span></div><p><span>                    
+</span></p><div class="panel constraint"><div class="panel-heading">Constraint: Syntactical Correctness</div><div class="panel-body"><span>                        The text of all 
+</span><span class="reference">OptIdentifier</span><span> children of a 
+</span><span class="reference">HeredocString</span><span> MUST match and 
+</span><span>                        is called the 
+</span><span class="keyword">Delimeter</span><span> of the 
+</span><span class="reference">HeredocString</span><span>.
+</span><span>                        
+</span><span class="reference">AnyText</span><span> children MUST NOT contain 
+</span><span class="text">&gt;</span><span> followed by 
+</span><span class="reference">Delimiter</span><span> and then 
+</span><span class="text">&gt;</span><span> or 
+</span><span>                        
+</span><span class="text">\</span><span> followed by 
+</span><span class="reference">Delimiter</span><span> and then 
+</span><span class="text">\</span><span>.
+</span><span>                    
+</span></div></div><p><span>                    The Value of an HeredocString is the concatenation of the Values from all children.
+</span><span>                    The Value of an AnyText node is its Text.
+</span><span>                
+</span></p><p><span>                
+</span></p><h4> <span>Objects</span> </h4><p><span>                    Objects can compose other elements by using attributes. They have the following structure:
+</span><span>                    
+</span></p><div class="productions"><a class="token-DefinedIdentifier" id="object" href="#object">Object</a><span class="token-WS">  </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">{</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><a class="token-Identifier" href="#objtype">ObjType</a><span class="token-WS"> </span><span class="token-OpenParen">(</span><a class="token-Identifier" href="#trltrv">TrlTrv</a><span class="token-WS"> </span><a class="token-Identifier" href="#ldtrv">LdTrv</a><span class="token-Opt">?</span><span class="token-WS"> </span><a class="token-Identifier" href="#prefixdefinition">PrefixDefinition</a><span class="token-CloseParen">)</span><span class="token-Star">*</span><span class="token-WS"> </span><span class="token-OpenParen">(</span><a class="token-Identifier" href="#trltrv">TrlTrv</a><span class="token-WS"> </span><a class="token-Identifier" href="#ldtrv">LdTrv</a><span class="token-Opt">?</span><span class="token-WS"> </span><a class="token-Identifier" href="#attribute">Attribute</a><span class="token-CloseParen">)</span><span class="token-Star">*</span><span class="token-WS"> </span><a class="token-Identifier" href="#trltrv">TrlTrv</a><span class="token-Opt">?</span><span class="token-WS"> </span><a class="token-Identifier" href="#ldtrv">LdTrv</a><span class="token-Opt">?</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">}</span><span class="token-StringEnd">&#x27;</span><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="objtype" href="#objtype">ObjType</a><span class="token-WS"> </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><a class="token-Identifier" href="#castcharacter">CastCharacter</a><span class="token-Opt">?</span><span class="token-WS"> </span><a class="token-Identifier" href="#typename">TypeName</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">#</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><a class="token-Identifier" href="#aliasname">AliasName</a><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="castcharacter" href="#castcharacter">CastCharacter</a><span class="token-WS"> </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">=</span><span class="token-StringEnd">&#x27;</span></div><p><span>                    
+</span></p><div class="panel constraint"><div class="panel-heading">Constraint: Well-formedness</div><div class="panel-body"><span>                        An AliasName child of an ObjType must be defined by a corresponding AliasDef element.
+</span><span>                    
+</span></div></div><p><span>                    Each Object has a qualified type name.
+</span><span>                    If the ObjType child has a TypeName child, its qualified type name is used.
+</span><span>                    Otherwise, if the ObjType has an AliasName child, the qualified type name is used that is assigned to the alias name by the corresponding AliasDef element. 
+</span></p><p><span>                    Attributes are defined as follows:
+</span><span>                    
+</span></p><div class="productions"><a class="token-DefinedIdentifier" id="attribute" href="#attribute">Attribute</a><span class="token-WS">         </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><a class="token-Identifier" href="#implicitattribute">ImplicitAttribute</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><a class="token-Identifier" href="#explicitattribute">ExplicitAttribute</a><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="implicitattribute" href="#implicitattribute">ImplicitAttribute</a><span class="token-WS"> </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><a class="token-Identifier" href="#expression">Expression</a><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="explicitattribute" href="#explicitattribute">ExplicitAttribute</a><span class="token-WS"> </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><a class="token-Identifier" href="#attributename">AttributeName</a><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">:</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><a class="token-Identifier" href="#trltrv">TrlTrv</a><span class="token-Opt">?</span><span class="token-WS"> </span><a class="token-Identifier" href="#ldtrv">LdTrv</a><span class="token-Opt">?</span><span class="token-WS"> </span><a class="token-Identifier" href="#expression">Expression</a></div><p><span>                    An AttributeName is defined similar to TypeName, however its prefix can be empty:
+</span><span>                    
+</span></p><div class="productions"><a class="token-DefinedIdentifier" id="localattrname" href="#localattrname">LocalAttrName</a><span class="token-WS">     </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><a class="token-Identifier" href="#identifier">Identifier</a><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="attributename" href="#attributename">AttributeName</a><span class="token-WS">     </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-OpenParen">(</span><a class="token-Identifier" href="#prefix">Prefix</a><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">/</span><span class="token-StringEnd">&#x27;</span><span class="token-CloseParen">)</span><span class="token-Opt">?</span><span class="token-WS"> </span><a class="token-Identifier" href="#localattrname">LocalAttrName</a><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="qualifiedattrname" href="#qualifiedattrname">QualifiedAttrName</a><span class="token-WS"> </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-OpenParen">(</span><a class="token-Identifier" href="#namespace">Namespace</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><a class="token-Identifier" href="#qualifiedtypename">QualifiedTypeName</a><span class="token-CloseParen">)</span><span class="token-WS"> </span><span class="token-StringStart">&quot;</span><span class="token-String">:</span><span class="token-StringEnd">&quot;</span><span class="token-WS"> </span><a class="token-Identifier" href="#localattrname">LocalAttrName</a></div><p><span>                    An 
+</span><span class="reference">AttributeName</span><span> consists of a prefix and a local attribute name:
+</span><span>                    The prefix is the text of the Prefix child if it has one, otherwise it is 
+</span><span class="null">Null</span><span>.
+</span><span>                    The local attribute name is the text of the LocalAttrName child.
+</span></p><p><span>                    
+</span></p><div class="panel constraint"><div class="panel-heading">Constraint: Well-formedness</div><div class="panel-body"><span>                        An AttributeName MUST NOT resolve its prefix to 
+</span><span class="null">Null</span><span> unless the prefix is 
+</span><span class="null">Null</span><span> itself.
+</span><span>                    
+</span></div></div><p><span>                    An 
+</span><span class="reference">AttributeName</span><span> resolves to a QualifiedAttrName with a matching local attribute name.
+</span></p><p><span>                    
+</span></p><div class="panel definition"><div class="panel-heading">Definition: Ordinary Attribute</div><div class="panel-body"><span>						If the prefix of an 
+</span><span class="reference">AttributeName</span><span> is 
+</span><span class="null">Null</span><span>, its parent ExplicitAttribute is called 
+</span><span class="keyword">Ordinary Attribute</span><span>.
+</span><span>						In this case, the qualified type name of the parent Object is used as QualifiedTypeName for the qualified attribute name.
+</span><span>					
+</span></div></div><p><span>                    
+</span></p><div class="panel definition"><div class="panel-heading">Definition: Attached Attribute</div><div class="panel-body"><span>						Otherwise, if the prefix is not 
+</span><span class="null">Null</span><span>, its parent ExplicitAttribute is called 
+</span><span class="keyword">Attached Attribute</span><span>.
+</span><span>						In that case, the namespace the prefix is resolved to is used as Namespace for the qualified attribute name.
+</span><span>					
+</span></div></div><p><span>                
+</span></p><p><span>                
+</span></p><h4> <span>Arrays</span> </h4><p><span>                    There are two different types of arrays: 
+</span><span class="reference">OrdinaryArray+s</span><span> and 
+</span><span class="reference">MarkupArray+s</span><span>.
+</span></p><p><span>                    Ordinary arrays are specified as follows:
+</span><span>                    
+</span></p><div class="productions"><a class="token-DefinedIdentifier" id="ordinaryarray" href="#ordinaryarray">OrdinaryArray</a><span class="token-WS"> </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">[</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><a class="token-Identifier" href="#expression">Expression</a><span class="token-Opt">?</span><span class="token-WS"> </span><span class="token-OpenParen">(</span><a class="token-Identifier" href="#trltrv">TrlTrv</a><span class="token-WS"> </span><a class="token-Identifier" href="#ldtrv">LdTrv</a><span class="token-Opt">?</span><span class="token-WS"> </span><a class="token-Identifier" href="#expression">Expression</a><span class="token-CloseParen">)</span><span class="token-Star">*</span><span class="token-WS"> </span><a class="token-Identifier" href="#trltrv">TrlTrv</a><span class="token-Opt">?</span><span class="token-WS"> </span><a class="token-Identifier" href="#ldtrv">LdTrv</a><span class="token-Opt">?</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">]</span><span class="token-StringEnd">&#x27;</span></div><p><span>                    The following production rules describe markup arrays:
+</span><span>                    
+</span></p><div class="productions"><a class="token-DefinedIdentifier" id="markuparray" href="#markuparray">MarkupArray</a><span class="token-WS">      </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">![</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><a class="token-Identifier" href="#comment">Comment</a><span class="token-Opt">?</span><span class="token-WS"> </span><span class="token-OpenParen">(</span><a class="token-Identifier" href="#markupelement">MarkupElement</a><span class="token-WS"> </span><a class="token-Identifier" href="#comment">Comment</a><span class="token-Opt">?</span><span class="token-CloseParen">)</span><span class="token-Star">*</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">]</span><span class="token-StringEnd">&#x27;</span><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="markupelement" href="#markupelement">MarkupElement</a><span class="token-WS">    </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><a class="token-Identifier" href="#ordinarystring">OrdinaryString</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><a class="token-Identifier" href="#heredocstring">HeredocString</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><a class="token-Identifier" href="#object">Object</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><a class="token-Identifier" href="#ordinaryarray">OrdinaryArray</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><a class="token-Identifier" href="#markupstring">MarkupString</a><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="markupstringchar" href="#markupstringchar">MarkupStringChar</a><span class="token-WS"> </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><a class="token-Identifier" href="#char">Char</a><span class="token-WS"> </span><span class="token-Without">\</span><span class="token-WS"> </span><span class="token-OpenParen">(</span><span class="token-RangeStart">[</span><span class="token-String">\</span><span class="token-String">&lt;</span><span class="token-String">&gt;</span><span class="token-String">{</span><span class="token-String">}</span><span class="token-RangeEnd">]</span><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">[</span><span class="token-StringEnd">&#x27;</span><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><span class="token-StringStart">&#x27;</span><span class="token-String">]</span><span class="token-StringEnd">&#x27;</span><span class="token-CloseParen">)</span><span class="token-WS">
+</span><a class="token-DefinedIdentifier" id="markupstring" href="#markupstring">MarkupString</a><span class="token-WS">     </span><span class="token-ProdDef">::=</span><span class="token-WS"> </span><span class="token-OpenParen">(</span><a class="token-Identifier" href="#markupstringchar">MarkupStringChar</a><span class="token-WS"> </span><span class="token-Disj">|</span><span class="token-WS"> </span><a class="token-Identifier" href="#escapesequence">EscapeSequence</a><span class="token-CloseParen">)</span><span class="token-Star">*</span></div><p><span>                    Hence all whitespace characters within markup arrays are interpreted as markup strings.
+</span><span>                
+</span></p><p><span>            
+</span></p><p><span>        
+</span></p><p><span>        
+</span></p><h2> <span>Schema</span> </h2><span>        
+</span><p><span>    
+</span></p></div></body></html>

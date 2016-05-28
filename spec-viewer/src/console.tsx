@@ -6,9 +6,10 @@ import { Content } from "./types.tsx";
 import { Deserializer } from "./Helper/Deserializer.ts";
 import { AnnotationBasedTypeSystem } from "./Helper/TypeSystem/AnnotationBasedTypeSystem.ts";
 import commandLineArgs from "command-line-args";
-import fs from "fs";
 import ReactDOMServer from 'react-dom/server';
 import "../tyml-parser/tyml.js";
+import fs from "fs-extra";
+import path from "path";
 
 interface CliArgs {
     src: string;
@@ -27,12 +28,10 @@ fs.readFile(options.src, 'utf8', (err,data) => {
 
     const result = new Deserializer(AnnotationBasedTypeSystem.getInstance()).deserialize(data);
     
-    const html = ReactDOMServer.renderToStaticMarkup(<div>{result.renderToHtmlWithDefaultState()}</div>);
+    const html = ReactDOMServer.renderToStaticMarkup(<html><head><link rel="stylesheet" href="style.css"></link></head><body><div id="root">{result.renderToHtmlWithDefaultState()}</div></body></html>);
     
-    fs.writeFile(options.out + "/SPEC.html", html, function(err) {
+    fs.writeFile(options.out + "/SPEC.html", html, err => {
         if(err) return console.log(err);
         console.log("Generated SPEC.html.");
     });
 });
-
-console.log(options);

@@ -1,0 +1,107 @@
+.reference { font-style: italic }
+.keyword { font-weight: bold }
+
+pre { background-color: beige; padding: 10px; }
+
+.productions {
+    background-color: beige; padding: 10px;
+    white-space: pre;
+    font-family: monospace;
+}
+
+.productions a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+.productions a:hover {
+  text-decoration: underline;
+}
+
+.token-DefinedIdentifier {
+    font-weight: bold;
+}
+
+.token-Identifier {
+    font-style: italic;
+}
+
+.token-HexRef {
+    color: darkslateblue;
+}
+
+.token-String {
+    color: blue;
+}
+
+.null {
+    font-style: italic;
+}
+
+.text { 
+    font-family: Courier New, Courier, monospace;
+    background-color: beige;
+    padding: 1px 3px;
+}
+
+body { width: 100%; text-align: center; }
+#root { 
+    max-width: 900px; 
+    text-align: justify;
+    margin: 0px auto; 
+    font-family: Verdana, Geneva, Tahoma, sans-serif; 
+    
+}
+
+/*
+.constraint.panel {
+    border-color: #337ab7;
+}
+
+.constraint .panel-heading {
+    background-color: #337ab7;
+    border-color: #337ab7;
+    color: white;
+}*/
+
+
+.constraint.panel {
+    border-color: #ebccd1;
+}
+
+.constraint .panel-heading {
+    background-color: #f2dede;
+    border-color: #ebccd1;
+    color: #a94442;
+}
+
+
+
+.definition.panel {
+    border-color: #bce8f1;
+}
+
+.definition .panel-heading {
+    background-color: #d9edf7;
+    border-color: #bce8f1;;
+    color: black;
+}
+
+
+.panel {
+    border: 1px solid black;
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    
+    margin-top: 5px;
+    margin-bottom: 0;
+    border-radius: 4px;
+}
+
+.panel-heading {
+    padding: 7px 15px;
+    font-size: 0.8em;
+}
+
+.panel-body {
+    padding: 10px 15px;
+}
