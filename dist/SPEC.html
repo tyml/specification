@@ -1,16 +1,16 @@
 <html><head><link rel="stylesheet" href="style.css"/></head><body><div id="root"><h1>Tyml Specification 0.9 - Draft</h1><p><span>        
 </span></p><h2> <span>Introduction</span> </h2><p><span>            Tyml is a text based and typed markup and data description language that is meant to
 </span><span>            be an alternative to XML, JSON and YAML. Tyml is the abbreviation of Typed markup language.
-</span></p><p><span>            Because Tyml is typed, thus every object must specify a global type for that it describes an instance,
-</span><span>            Tyml documents can be validated and processed easily by using associated type information.
-</span><span>            This allows tools that can provide domain specific assistance like autocompletion or graphical
+</span></p><p><span>            Because Tyml is typed, every object must specify a global type for which it describes an instance.
+</span><span>            Tyml documents can be validated and processed easily by using the associated type information.
+</span><span>            This makes tools possible that can provide domain specific assistance like autocompletion or graphical
 </span><span>            user interfaces for editing Tyml documents.  
 </span><br/><span>            The concept of namespaces that is inspired by xml prevents type and attribute naming collisions,
 </span><span>            so that each tyml object can be extended by custom attributes in a custom namespace without
 </span><span>            neccessary influencing the processing of the document. Thus, each tyml document can be extended at will.
-</span></p><p><span>            Tyml supports the description of objects, lists, strings and primitives, 
-</span><span>            whereby primitives are strings that have a user defined meaning like numbers or booleans.
-</span><span>            Moreover, tyml supports embedding both objects and arbitrary unmasked text into a markup string.
+</span></p><p><span>            Tyml supports the description of objects, lists, strings and primitives. 
+</span><span>            Primitives are strings that have a user defined meaning like numbers or booleans.
+</span><span>            Moreover, tyml supports embedding objects mixed with arbitrary text into a markup string.
 </span></p><p><span>            This makes tyml suitable to describe complex configurations and extensive markup documents,
 </span><span>            while still being appropriate to store and transmit simple data due to its compact notation.
 </span></p><p><span>            

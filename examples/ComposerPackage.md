@@ -2,7 +2,7 @@ Composer Package
 ================
 
 ```tyml
-{!tyml 1.0 !ns:<http://composer.org/tyml-schema/1.0>}
+{!tyml 0.9 !ns:<composer.org/1.0>}
 {ComposerPackage <nunzion/php-expect>
     Type:           <library>
     Description:    <An expressive but lightweight library \

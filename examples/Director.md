@@ -4,7 +4,7 @@ Example "Director"
 Inspired by [this answer](http://stackoverflow.com/questions/51492/what-usable-alternatives-to-xml-syntax-do-you-know#answer-2567924).
 
 ```tyml
-{!tyml 1.0 !ns:<http://movies.mov/tyml-schema/1.0>}
+{!tyml 0.9 !ns:<movies.mov/1.0>}
 {-- Spielberg was born in 1946 --}
 {Director <Spielberg> Movies: [
     {Movie <Jaws> Year:1975}

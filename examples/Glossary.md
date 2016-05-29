@@ -4,7 +4,7 @@ Example "Glossary"
 Taken from [json.org/examples](http://json.org/example).
 
 ```tyml
-{!tyml 1.0 !ns:<http://glossary.org/tyml-schema/1.0>}
+{!tyml 0.9 !ns:<glossary.org/1.0>}
 {Glossary <example glossary>
     GlossDiv: {GlossDiv <S> [
         {GlossEntry 	<SGML>

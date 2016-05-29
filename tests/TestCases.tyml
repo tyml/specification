@@ -1,7 +1,7 @@
-{!tyml !ns:<http://tyml.org/tyml-testcases>}
+{!tyml !ns:<tyml.org/testcases/1.0>}
 {TestCases [
 	{TestCase
-		<tyml<{!tyml !ns:<http://test.de>}{Root}>tyml>
+		<tyml<{!tyml !ns:<test.de>}{Root}>tyml>
 
 		ResultXml:<xml<
 			<Document xmlns="http://tyml.org/tyml-xml" Start="0" End="34">
@@ -43,7 +43,7 @@
 		}
 
 		{TestCase
-			<tyml<«1»{p/Root !ns/p:<http://test.de>}>tyml>
+			<tyml<«1»{p/Root !ns/p:<test.de>}>tyml>
 			Errors:[
 				{Error <The header is missing.> Location:{TextPoint 1}}
 			]
