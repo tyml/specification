@@ -1,5 +1,6 @@
 /// <reference path="../jspm_packages/npm/reflect-metadata@0.1.3/reflect-metadata.d.ts" />
 
+
 declare module "hashmap" {
     
     class HashMap<TKey, TValue> {

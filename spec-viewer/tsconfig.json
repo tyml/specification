@@ -19,6 +19,7 @@
         "src/Helper/TypeSystem/AnnotationBasedTypeSystem.ts",
         "src/Helper/Annotations.ts",
         "src/Helper/Deserializer.ts",
-        "src/console.tsx"
+        "src/console.tsx",
+        "src/Helper/EglLexer.ts"
     ]
 }

@@ -42,6 +42,7 @@ SystemJS.config({
     "react-dom": "npm:react-dom@0.14.7",
     "reflect-metadata": "npm:reflect-metadata@0.1.3",
     "stream": "github:jspm/nodelibs-stream@0.2.0-alpha",
+    "typed-lexer": "npm:typed-lexer@1.0.2",
     "util": "github:jspm/nodelibs-util@0.2.0-alpha"
   },
   packages: {
