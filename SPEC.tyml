@@ -60,7 +60,7 @@
                 
                 The text of an optional child node is the text of the child node if it exists, otherwise it is the {Reference <Empty String>}.
 
-				{Null} refers to a special value that is different from every other value.
+                {Null} refers to a special value that is different from every other value.
             ]}
             
 
@@ -72,7 +72,7 @@
                     IdentifierContChar  ::= '_' | '.' | '-' | #ID_Continue
                     OptIdentifier       ::= Identifier?
                 >>}
-				{Reference <ID_Start>} and {Reference <ID_Continue>} refer to the corresponding Unicode properties.
+                {Reference <ID_Start>} and {Reference <ID_Continue>} refer to the corresponding Unicode properties.
             ]}
 
             {Section <Whitespaces and Comments> ![
@@ -91,7 +91,7 @@
 
                 {Constraint <Syntactical Correctness> ![
                     The text of all {Reference <OptIdentifier>} children of a {Reference <Comment>} MUST match and is called the {Keyword <Delimeter>} of the {Reference <Comment>}.
-                    {Reference <AnyText>} children MUST NOT contain the {Reference <Delimiter>} followed by {Text <--}>}.
+                    The text of {Reference <AnyText>} children MUST NOT contain the {Reference <Delimiter>} followed by {Text <--}>}.
                 ]}
 
                 These productions form the leading and trailing trivia productions:
@@ -126,8 +126,15 @@
                 {Productions <<
                     PrefixDefinition ::= '!ns' ('/' NonEmptyPrefix)? ':' TrlTrv? LdTrv? '<' Namespace '>'
                 >>}
-                The prefix defined by the {Reference <PrefixDefinition>} is the text of the optional NonEmptyPrefix child.
-                The namespace specified by a {Reference <PrefixDefinition>} is the text of its Namespace child.
+
+				{Property <PrefixDefinition> <Prefix> ![
+					The prefix defined by a {Reference <PrefixDefinition>} is the text of the optional {Reference <NonEmptyPrefix>} child.
+				]}
+
+                {Property <PrefixDefinition> <Namespace> ![
+					The namespace specified by a {Reference <PrefixDefinition>} is the text of its {Reference <Namespace>} child.
+				]}
+                
 
 
 
@@ -140,7 +147,7 @@
 
                 {Constraint <Well-formedness> ![
                     When removing a {Reference <PrefixDefinition>} node from its {Reference <Parse Tree>},
-                    its former parent must resolve the prefix defined by the PrefixDefinition to {Null}.
+                    its former parent must resolve the prefix defined by the {Reference <PrefixDefinition>} to {Null}.
                 ]}
 
                 Prefixes are used for type names:
@@ -150,16 +157,17 @@
                     QualifiedTypeName ::= Namespace "#" LocalTypeName
                 >>}
 
-                A {Reference <TypeName>} consists of a prefix that is the text of the optional NonEmptyPrefix child 
-                and a local type name that is the text of the LocalTypeName child.
+                A {Reference <TypeName>} consists of a prefix that is the text of the optional {Reference <NonEmptyPrefix>} child 
+                and a local type name that is the text of the {Reference <LocalTypeName>} child.
 
                 {Constraint <Well-formedness> ![
                     A {Reference <TypeName>} MUST NOT resolve its prefix to {Null}.
                 ]}
 
-                A {Reference <TypeName>} resolves to a {Reference <QualifiedTypeName>}. 
-                It assembles the namespace the prefix is resolved to and the local type name.
-
+                {Property <TypeName> <Qualified Type Name> ![
+					A {Reference <TypeName>} node resolves to a {Reference <QualifiedTypeName>}. 
+					It assembles the namespace the node resolves the prefix to and the local type name.
+				]}
             ]}
 
 
@@ -194,12 +202,12 @@
                     Document ::= (Header TrlTrv?) (LdTrv? AliasDef TrlTrv?)* (LdTrv? Object TrlTrv?) LdTrv?
                 >>}
 
-				{Definition <Root Object> ![
+                {Definition <Root Object> ![
                     The Object child of Document nodes is called {Keyword <Root Object>}.
                 ]}
 
                 The document header is used for recognizing a tyml document including its version and for specifying global namespace prefixes.
-				Document nodes use the Header child for resolving prefixes.
+                Document nodes use the Header child for resolving prefixes.
                 The header is defined as follows:
                 {Productions <<
                     Header ::= '{!tyml 0.9' (TrlTrv LdTrv? PrefixDefinition)* TrlTrv? LdTrv? '}'
@@ -213,10 +221,10 @@
                     AliasName ::= Identifier
                 >>}
 
-                An AliasDef defines an alias name and assigns it a qualified type name.
+                An {Reference <AliasDef>} defines an alias name and assigns it a the qualified type name of its {Reference <TypeName>} child node.
 
                 {Constraint <Well-formedness> ![
-                    Different AliasDefs MUST define different alias names.
+                    Different {Reference <AliasDefs>} MUST define different alias names.
                 ]}
 
                 {-- Maybe !type-alias suits better? --}
@@ -226,11 +234,11 @@
                 {Reference <Expressions>} can either be literals or containers for other {Reference <Expressions>}:
                 {Productions <<
                     Expression ::= Literal | Container
-                    Literal    ::= Primitive | OrdinaryString | HeredocString 
-                    Container  ::= Object | OrdinaryArray | MarkupArray
+                    Literal    ::= Primitive | String
+                    Container  ::= Object | Array
                 >>}
 
-                {Definition <Value of a Literal> ![Literals represent an unicode string called {Keyword <Value>}.]}
+                {Property <Literal> <Value> ![Literals represent an unicode string called {Keyword <Value>}.]}
 
                 {Section <Primitives> ![
                     Primitives represent atomic values like booleans or numbers:
@@ -239,18 +247,27 @@
                         PrimitiveChar  ::= IdentifierContChar | [+*=|~!?,;/\"'()^&@%$#]
                     >>}
 
-                    The {Reference <Value>} of a {Reference <Primitive>} is its Text.
+					{Property <Primitive> <Value> ![The {Reference <Value>} of a {Reference <Primitive>} is its Text.]}
                 ]}
 
                 {Section <Strings> ![
+
+                    There are two different possibilities to represent strings:
+                    {Productions <<
+                        String ::= OrdinaryString | HeredocString
+                    >>}
+
                     The following productions describe ordinary strings:
                     {Productions <<
                         OrdinaryString     ::= '<' (OrdinaryStringChar | EscapeSequence)* '>'
                         OrdinaryStringChar ::= . \ ('\' | '<' | '>' | LineBreak)
                     >>}
 
-                    The Value of an ordinary string is the concatenation of the Values from all children.
-                    The Value of an ordinary string char is its Text.
+					{Property <OrdinaryString> <Value> ![
+						The {Reference <Value>} of an ordinary string is the concatenation of the {Reference <Value+s>} from all its children.
+					]}
+                    
+                    The {Reference <Value>} of an ordinary string char is its text.
 
                     Escape sequences are constructed as following:
                     {Productions <<
@@ -264,10 +281,12 @@
                         IgnoredWS          ::= LineBreak SingleLineWSChar*
                     >>}
                     
-                    The Values of the escape sequences EscapedCR, EscapedLF and EscapedTab are the unicode characters {Text <#x0D>}, {Text <#x0A>} and {Text <#x09>}.
-                    The Value of an EscapedSpecialChar is its Text. The Value of a CodePointRef is the unicode character with the given hexadecimal codepoint.
-                    The Value of an IgnoredWS node is the empty string. 
-                    The IgnoredWS escape sequence can be used to insert line breaks and indentations into strings without changing its Value.
+                    The {Reference <Value+s>} of the escape sequences {Reference <EscapedCR>}, {Reference <EscapedLF>} and {Reference <EscapedTab>} 
+                    are the unicode characters {Text <#x0D>}, {Text <#x0A>} and {Text <#x09>}.
+                    The {Reference <Value>} of an {Reference <EscapedSpecialChar>} is its text.
+                    The {Reference <Value>} of a {Reference <CodePointRef>} is the unicode character with the given hexadecimal codepoint.
+                    The {Reference <Value>} of an {Reference <IgnoredWS>} node is the empty string. 
+                    The {Reference <IgnoredWS>} escape sequence can be used to insert line breaks and indentations into strings without changing its {Reference <Value>}.
 
                     The following production describes heredoc strings:
                     {Productions <<
@@ -282,8 +301,11 @@
                         {Text <\\>} followed by {Reference <Delimiter>} and then {Text <\\>}.
                     ]}
 
-                    The Value of an HeredocString is the concatenation of the Values from all children.
-                    The Value of an AnyText node is its Text.
+					{Property <HeredocString> <Value> ![
+						The {Reference <Value>} of an {Reference <HeredocString>} is the concatenation of the {Reference <Value+s>} from all children.
+					]}
+
+                    The {Reference <Value>} of an {Reference <AnyText>} node is its text.
                 ]}
 
 
@@ -296,23 +318,29 @@
                     >>}
 
                     {Constraint <Well-formedness> ![
-                        An AliasName child of an ObjType must be defined by a corresponding AliasDef element.
+                        An {Reference <AliasName>} child of an {Reference <ObjType>} must be defined by a corresponding {Reference <AliasDef>} element.
                     ]}
 
-                    Each Object has a qualified type name.
-                    If the ObjType child has a TypeName child, its qualified type name is used.
-                    Otherwise, if the ObjType has an AliasName child, the qualified type name is used that is assigned to the alias name by the corresponding AliasDef element. 
+					{Property <Object> <Qualified Type Name> ![
+						Each {Reference <Object>} has a qualified type name.
+						If the {Reference <ObjType>} child has a {Reference <TypeName>} child, its qualified type name is used.
+						Otherwise, if the {Reference <ObjType>} has an {Reference <AliasName>} child, 
+						the qualified type name is used that is assigned to the alias name by the corresponding {Reference <AliasDef>} element. 
+					]}
 
+                    {Definition <Cast Object> ![
+						The parent {Reference <Object>} of a {Reference <CastCharacter>} node is called {Keyword <Cast Object>}.
+                    ]}
 
                     Attributes are defined as follows:
                     {Productions <<
                         Attribute         ::= ImplicitAttribute | ExplicitAttribute
-                        ImplicitAttribute ::= Expression
-                        ExplicitAttribute ::= AttributeName ':' TrlTrv? LdTrv? Expression
-
+                        ImplicitAttribute ::= AttributeValue
+                        ExplicitAttribute ::= AttributeName ':' TrlTrv? LdTrv? AttributeValue
+                        AttributeValue    ::= Expression
                     >>}
 
-                    An AttributeName is defined similar to TypeName, however its prefix can be empty:
+                    An {Reference <AttributeName>} is defined similar to {Reference <TypeName>}, however its prefix can be empty:
                     {Productions <<
                         LocalAttrName     ::= Identifier
                         AttributeName     ::= (Prefix '/')? LocalAttrName
@@ -320,29 +348,34 @@
                     >>}
 
                     An {Reference <AttributeName>} consists of a prefix and a local attribute name:
-                    The prefix is the text of the Prefix child if it has one, otherwise it is {Null}.
-                    The local attribute name is the text of the LocalAttrName child.
+                    The prefix is the text of the {Reference <Prefix>} child if it has one, otherwise it is {Null}.
+                    The local attribute name is the text of the {Reference <LocalAttrName>} child.
 
                     {Constraint <Well-formedness> ![
-                        An AttributeName MUST NOT resolve its prefix to {Null} unless the prefix is {Null} itself.
+                        An {Reference <AttributeName>} MUST NOT resolve its prefix to {Null} unless the prefix is {Null} itself.
                     ]}
 
-                    An {Reference <AttributeName>} resolves to a QualifiedAttrName with a matching local attribute name.
+					{Property <AttributeName> <Qualified Attribute Name> ![
+						An {Reference <AttributeName>} resolves to a {Reference <QualifiedAttrName>} with a matching local attribute name.
+					]}
 
                     {Definition <Ordinary Attribute> ![
-						If the prefix of an {Reference <AttributeName>} is {Null}, its parent ExplicitAttribute is called {Keyword <Ordinary Attribute>}.
-						In this case, the qualified type name of the parent Object is used as QualifiedTypeName for the qualified attribute name.
-					]}
+                        If the prefix of an {Reference <AttributeName>} is {Null}, its parent {Reference <ExplicitAttribute>} is called {Keyword <Ordinary Attribute>}.
+                        In this case, the qualified type name of the parent {Reference <Object>} is used as {Reference <QualifiedTypeName>} child for the qualified attribute name.
+                    ]}
                     
                     {Definition <Attached Attribute> ![
-						Otherwise, if the prefix is not {Null}, its parent ExplicitAttribute is called {Keyword <Attached Attribute>}.
-						In that case, the namespace the prefix is resolved to is used as Namespace for the qualified attribute name.
-					]}
+                        Otherwise, if the prefix is not {Null}, its parent {Reference <ExplicitAttribute>} is called {Keyword <Attached Attribute>}.
+                        In that case, the namespace the prefix is resolved to is used as {Reference <Namespace>} child for the qualified attribute name.
+                    ]}
                 ]}
 
                 {Section <Arrays> ![
                     
-                    There are two different types of arrays: {Reference <OrdinaryArray+s>} and {Reference <MarkupArray+s>}.
+                    There are two different types of arrays: {Reference <OrdinaryArray+s>} and {Reference <MarkupArray+s>}:
+                    {Productions <<
+                        Array ::= OrdinaryArray | MarkupArray
+                    >>}
 
                     Ordinary arrays are specified as follows:
                     {Productions <<
@@ -363,10 +396,234 @@
         ]}
 
 
-        {Section <Schema> ![
+        {Section <Typesystem> ![
             
-        ]}
+            {Section <Assignability> ![
 
+                The set {Reference <DistinctTypes>} represents all inherently distinct types that cannot be assigned to each other unless explicitly stated.
+                {Reference <AliasTypes>} represents the set of all types that represent an alias for an other type. These sets must be disjunct:
+
+                {LatexBlock <txt<
+                     DistinctTypes \cap AliasTypes = \emptyset
+                >txt>}
+
+                Together they form the set of all base types. Each base type specfies an arity that defines how many type arguments it accepts:
+            
+                {LatexBlock <txt<
+                     & BaseTypes &&:=&& DistinctTypes \cup AliasTypes \\ 
+                     & arity&&: && BaseTypes \to \mathbb{N}_0
+                >txt>}
+            
+                The term algebra {Reference <Types>} represents all types that can be build using the given base types. 
+                A natural number {Latex <n>} refers to the {Latex <n>}th type parameter of the parent base type.
+                {Reference <Types>} is the smallest set that fulfills the following constraints:
+
+                {LatexBlock <txt<
+                    \mathbb{N} &&\subset & \quad Types \\ 
+                    t_1, t_2 \in Types &&\Rightarrow & \quad t_1 \cup t_2 \in Types \\
+                    t \in BaseTypes, t_1, ..., t_n \in Types &&\Rightarrow &\quad t[t_1, ..., t_n] \in Types \quad \text{if}\: n = arity(t)
+                >txt>}
+            
+
+                In the following, {Latex <<\operatorname{Fin}(S)>>} denotes the set of all finite subsets from the set {Latex <S>}.
+
+                The map {Reference <assignableTo>} specifies a finite set of types instances of a given distinct type can be assigned to.
+                The map {Reference <aliased>} specifies the type a given alias type refers to:
+                {LatexBlock <txt<
+                     assignableTo&&:& \quad DistinctTypes \to \operatorname{Fin}( Types) \\
+                     aliased&&:& \quad AliasTypes \to Types
+                >txt>}
+                The return values of both maps must not contain numbers that are greater than the arity of their arguments.
+                The graph induced by {Reference <assignableTo>} and {Reference <aliased>} must not contain cycles. 
+                Type arguments are not considered and do not yield edges.
+
+                {Reference <ClosedDistinctTypes>} are types which provided type arguments for {Reference <DistinctTypes>}.
+
+                {LatexBlock <txt<
+                     ClosedDistinctTypes &&:=\quad& \{ t[t_1, ..., t_n] \; | \; t \in DistinctTypes, t_1, ..., t_n \in Types, n = arity(t) \} \\
+                     ClosedTypes &&:=\quad& \{ t \in Types \; | \; t \; \text{does#not#contain#any#number} \} 
+                >txt>}
+               
+
+                Insert replaces all occurrences of the number {Latex <i>} in its argument with the type {Latex <t_i>}:
+                {LatexBlock <txt<
+                    insert_{t_1, ..., t_n}: Types \to Types
+                >txt>}
+            
+                {Reference <normalize>} resolves aliases and factors out union types:
+                {LatexBlock <txt<
+                     normalize: ClosedTypes &&\to& \quad \operatorname{Fin}( ClosedDistinctTypes) \\
+                     t_1 \cup t_2 &&\mapsto& \quad normalize(t_1) \cup normalize(t_2) \\
+                     t[t_1, ..., t_n] &&\mapsto& \quad normalize( insert_{t_1, ..., t_n}( aliased(t))) \quad \text{if}\;t \in AliasTypes \\
+                     t &&\mapsto& \quad \{ t \} \quad \text{if}\: t \in ClosedDistinctTypes
+                >txt>}
+            
+                {-- A type {Latex <t>} is called a {Keyword <Union Type>} iff {Latex <|normalize(t)| \\geq 2>}. --}
+
+                {Reference <assignableTo>} can be continued on {Reference <ClosedDistinctTypes>}:
+                {LatexBlock <txt<
+                     assignableTo: \quad ClosedDistinctTypes &&\to& \quad\operatorname{Fin}( ClosedTypes) \\
+                     t[t_1, ..., t_n] &&\mapsto& \quad \{ insert_{t_1, ..., t_n}(t') \; | \; t' \in assignableTo(t) \}
+                >txt>}
+            
+                This makes it possible to continue {Reference <assignableTo>} as relation {Latex <<\preceq>>}
+                for {Reference <ClosedTypes>} {Latex <a>} and {Latex <b>}, spoken as {Latex <a>} is assignable to {Latex <b>}:
+
+                {LatexBlock <txt<
+                    a \preceq b \: &\Leftrightarrow \: &&\forall a'[a_1, ..., a_n] \in normalize(a): \exists b'[b_1, ..., b_n] \in normalize(b):\\
+                    &&&(a' = b' \:\land\: \forall i \in \{1, ..., n\}: a_i \preceq b_i \:\land\: b_i \preceq a_i) \\
+                    &&\lor \: &\exists t \in assignableTo(a'[a_1, ..., a_n]): t \preceq  b[b_1, ..., b_n]
+                >txt>}
+            ]}
+
+            {Section <Types in Tyml> ![
+				{Definition <Root Types> ![
+					The set {Reference <DistinctTypes>} contains at least the root types 
+					{Keyword <Any>}, {Keyword <Primitive>}, {Keyword <String>} and {Keyword <Object>} with an arity of zero 
+					and {Keyword <Array>} with an arity of one. All these types are assignable only to the root type {Reference <Any>}.
+				]}
+
+                User defined types expand the {Reference <BaseTypes>} set.
+                Each user defined type can be adressed by an unique name that matches the {Reference <QualifiedTypeName>} production.
+                Those user defined types which are {Reference <DistinctTypes>} can extend other {Reference <ClosedDistinctTypes>}.
+                They belong to exactly one of the following categories:
+                {List [
+                    ![
+                        {Keyword <Primitive Types>} 
+                        
+                        Extend other primitive types or the root type {Reference <Primitive>}. Have an arity of zero.
+                        They are assignable to the type they extend.
+                    ]
+                    ![
+                        {Keyword <String Types>}
+                        
+                        Extend other string types or the root type {Reference <String>}. Have an arity of zero.
+                        They are assignable to the type they extend.
+                    ]
+                    ![
+                        {Keyword <Object Types>}
+                        
+                        Extend other object types or the root type {Reference <Object>}. Their arity is user defined.
+                        Object types specify a list of closed interface types they implement.
+                        They are assignable to the type they extend and to all interfaces they implement.
+                        
+                    ]
+                    ![
+                        {Keyword <Interface Types>}
+                        
+                        Specify a list of closed interface types they extend. Their arity is user defined. 
+                        They are assignable to {Reference <Object>} and all interfaces they extend.
+                    ]
+                    ![
+                        {Keyword <Array Types>}
+
+                        Extends an other array type or the root type {Reference <Array>}. Has an arity of one.
+                        They are assignable to the type they extend.
+                    ]
+                    ![
+                        {Keyword <Alias Types>}
+
+                        Defines an alias for a type. Its arity is user defined.
+                    ]
+                ]}
+                {-- TODO: constraints --}
+            ]}
+
+            {Section <Object Types> ![
+                Object types define a list of own attributes.
+
+                Attributes have the following properties:
+                {List [
+                    ![
+                        {Keyword <Name>}. 
+                        The attribute's name. 
+                        Its values must match the {Reference <Identifier>} production.
+                    ]
+                    ![
+                        {Keyword <Type>}.
+                        The attribute's type. Its values are members of {Reference <Types>}. 
+                        Must not contain numbers that are greater than the type's arity.
+                    ]
+                    ![
+                        {Keyword <CanBeImplicit>}. Is either {Text <true>} or {Text <false>} and specfies whether the name of the attribute can be omitted.
+                    ]
+                    ![
+                        {Keyword <IsOptional>}. Is either {Text <true>} or {Text <false>} and specfies whether the attribute is optional.
+                    ]
+                ]}
+
+
+				{Property <Object Type> <Attribute Liste> ![
+					The attribute list of a given object type 
+					is defined as the concatenation of the extended type's attribute list with the list of own attributes.
+				]}
+                Elements of the attribute list MUST have different names.
+
+				{Property <Object Type> <nth Implicit Attribute> ![
+					The {Latex <n>}th implicit attribute of an object type refers to the
+					{Latex <n>}th element of the attribute list whose {Reference <CanBeImplicit>} property is set to {Text <true>}.
+				]}
+
+                All these definitions apply to closed object types likewise. 
+				However, numbers within the type property of attributes are replaced by the corresponding type argument.
+            ]}
+
+			{Section <Defining User Defined Types> ![
+				User defined types are described by Tyml documents whose root .
+
+			]}
+
+            {Section <Type Inference> ![
+
+				The type of an expression depends on the expression kind, its value and its expected type:
+                {LatexBlock <<
+                    inferType_{expected \in Types}: Expressions \to Types
+                >>}
+
+				Let {Latex <e_1, e_2, ..., e_n>} be the result of {Latex < normalize( expected)>}.
+
+				If the expression is a {Reference <Primitive>} or a {Reference <String>}:
+				The inferred type is the first {Latex <e_i>} that is assignable to the root type {Reference <Primitive>} respectively {Reference <String>} 
+				whose constraints are met by the value of the expression.
+				If there is no {Latex <e_i>} that fulfills these conditions but an {Latex <e_j>} that equals the root type {Reference <Any>}, 
+				the inferred type is the closed root type {Reference <Primitive>} respectively {Reference <String>}.
+
+				Global invariant type arguments are special types solely used for this specification.
+				They are assignable to every other type and every other type is assignable to them.
+				
+
+
+				If the expression is an {Reference <Array>}:
+				The inferred type is the first {Latex <e_i>} that is assignable to the root type {Reference <Array>} 
+				instantiated with the global invariant type argument.
+				
+				
+				If the expression is an {Reference <Object>}:
+				
+				The qualified type name of the {Reference <Object>} must point to a user defined type.
+                If the object has an attached attribute with the qualified attribute name {Text <<tyml.org/types:TypeArgs>>}, 
+				the types blablablab.
+				Otherwise, the type arguments are inferred from the expected type.
+
+
+                {Constraint <Validness> ![
+					If an {Reference <Object>} is not a {Reference <Cast Object>}, its estimated type MUST be an object type.
+				]}
+            ]}
+
+            {Section <Validation> ![
+            
+				The expected type of the root object is the root type {Reference <Any>}.
+
+
+            ]}
+
+
+
+
+            {Section <Defining Types> ![
+            ]}
+        ]}
 
        
 

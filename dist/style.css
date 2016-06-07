@@ -38,13 +38,13 @@ pre { background-color: beige; padding: 10px; }
     font-style: italic;
 }
 
-.text { 
+.text-span { 
     font-family: Courier New, Courier, monospace;
     background-color: beige;
     padding: 1px 3px;
 }
 
-body { width: 100%; text-align: center; }
+body { width: 99%; text-align: center; }
 #root { 
     max-width: 900px; 
     text-align: justify;

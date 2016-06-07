@@ -1,31 +1,52 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import "reflect-metadata";
-import "./types.tsx";
-import { Content } from "./types.tsx";
+import "./Types/types.tsx";
+import { HtmlRenderState, Content } from "./Types/types.tsx";
 import $ from "jquery";
 import { Deserializer } from "./Helper/Deserializer.ts";
 import { AnnotationBasedTypeSystem } from "./Helper/TypeSystem/AnnotationBasedTypeSystem.ts";
 import "../tyml-parser/tyml.js";
 
 type GUIProps = { };
-type GUIState = { content: Content };
+type GUIState = { content: Content; state: HtmlRenderState; };
 
 class GUI extends React.Component<GUIProps, GUIState> {
 	constructor(props: GUIProps) {
 		super(props);
 		
-		$.get("../SPEC.tyml", data => {
-			const result = new Deserializer(AnnotationBasedTypeSystem.getInstance()).deserialize(data);
-			this.setState({ content: result });
-		});
+		setTimeout(() => this.updateLoop(), 400);
+	}
+	
+	private lastContent: string;
+	
+	
+	updateLoop() {
 		
+		$.get("../SPEC.tyml?c=" + new Date().getMilliseconds() , data => {
+			
+			setTimeout(() => this.updateLoop(), 400);
+			
+			if (this.lastContent == data) return;
+			this.lastContent = data;
+			
+			const content: Content = new Deserializer(AnnotationBasedTypeSystem.getInstance()).deserialize(data);
+			var state = Content.getDefaultState();
+			this.setState({ content: content, state: state });
+			
+			
+		});
 	}
 	
 	render() {
-		return <div>
-			{ this.state ? this.state.content.renderToHtmlWithDefaultState() : "" }
-		</div>;
+		const content = this.state ? this.state.content : null;
+		const state = this.state ? this.state.state : null;
+		
+		return (
+			<div>
+				{ content ? content.renderToHtml(state) : "" }
+			</div>
+		);
 	}
 }
 

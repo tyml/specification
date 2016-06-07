@@ -1,84 +1,34 @@
-import { TemplateField, TemplateType, ArrayType, StringType, UnionType, FieldOptions, ImplicitTemplateField } from "./Helper/Annotations.ts";
+import { TemplateField, TemplateType, ArrayType, StringType, UnionType, FieldOptions, ImplicitTemplateField } from "../Helper/Annotations.ts";
 import * as React from "react";
-import { EglLexerFactory } from "./Helper/EglLexer.ts";
- 
+import { EglLexerFactory } from "../Helper/EglLexer.ts";
+import { ReferenceManager } from "./ReferenceManager.ts";
+import { LatexManager } from "./LatexManager.tsx";
+import { HtmlElement, elToArr, extend, formatCode } from "./Utils.ts";
+import { Promise } from "es6-promise";
+
+
 function MyTemplateType() {
     return TemplateType("tyml.org/spec/0.9");
 }  
 
 
-function extend<T>(obj: any, parent: T): T {
-	for (const x in parent)
-		if (obj[x] === undefined)
-			obj[x] = (parent as any)[x];
-	return obj;
-}
 
-function formatCode(code: string): string {
-	var codeLines = code.split(/\r\n|\n/);
-	var minWhitespaces = code.length;
-
-	var start = -1;
-	var end = -1;
-	codeLines.forEach((line, idx) => {
-		var c = 0;
-		while (c <= line.length && line.charAt(c) === " ") { c++; }
-
-		if (c !== line.length) {
-			if (c < minWhitespaces) minWhitespaces = c;
-			if (start === -1) start = idx;
-			end = idx;
-		}
-	});
-
-	var result = "";
-	codeLines.forEach((line, idx) => {
-		if (idx < start || idx > end) return;
-
-		var c = 0;
-		while (c <= line.length && line.charAt(c) === " ") { c++; }
-
-		for (var i = minWhitespaces; i < line.length; i++) {
-			result += line.charAt(i);
-		}
-		if (idx != end) result += "\n";
-	});
-
-	return result;
-}
-
-type HtmlElement = JSX.Element | JSX.Element[];
-
-function elToArr(e: HtmlElement): JSX.Element[] {
-	if (Array.isArray(e))
-		return e;
-	return [e] as any;
-}
-
-
-interface HtmlRenderState {
+export interface HtmlRenderState {
 	chapterDepth: number;
 	referenceManager: ReferenceManager;
+	latexManager: LatexManager;
 }
-
-class ReferenceManager {
-	
-	public register(name: string) {
-		
-	}
-	
-	public getId(name: string) {
-		return name.replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase();
-	}
-}
-
 
 
 @UnionType({ unitedArrayTypes:[() => ContentArray], unitedStringTypes:[() => ContentString] })
 export abstract class Content {
 	
+	public static getDefaultState(): HtmlRenderState {
+		return { chapterDepth: 1, referenceManager: new ReferenceManager(), latexManager: new LatexManager() };
+	}
+	
 	public renderToHtmlWithDefaultState(): HtmlElement {
-		return this.renderToHtml({ chapterDepth: 1, referenceManager: new ReferenceManager() });
+		return this.renderToHtml(Content.getDefaultState());
 	}
 	
 	public abstract renderToHtml(state: HtmlRenderState): HtmlElement;
@@ -155,8 +105,11 @@ class Reference extends Content {
 	public referenced: string;
 	
 	public renderToHtml(state: HtmlRenderState): HtmlElement {
+		
+		const text = this.referenced.replace(/\+/, "");
+		
 		return (
-			<span className="reference">{ this.referenced }</span>
+			<span className="reference">{ text }</span>
 		);
 	}
 	
@@ -203,6 +156,38 @@ class Definition extends Content {
 	
 	public getChildren(): Content[] { return [ this.content ]; }
 }
+
+
+@MyTemplateType()
+class Property extends Content {
+	@ImplicitTemplateField()
+	public nodeType: string;
+	
+	@ImplicitTemplateField()
+	public properyName: string;
+	
+	@ImplicitTemplateField()
+	public content: Content;
+	
+	public renderToHtml(state: HtmlRenderState): HtmlElement {
+		return (
+			<div className="panel definition">
+				<div className="panel-heading">Property: { this.nodeType } &rarr; { this.properyName }</div>
+				<div className="panel-body">{ this.content.renderToHtml(state) }</div>	
+			</div>
+		);
+	}
+	
+	public canInParagraph() { return false; }
+	
+	public register(refMngr: ReferenceManager) { 
+		refMngr.register(this.properyName); 
+		super.register(refMngr);
+	}
+	
+	public getChildren(): Content[] { return [ this.content ]; }
+}
+
 
 @MyTemplateType()
 class Constraint extends Content {
@@ -292,8 +277,36 @@ class Text extends Content {
 	
 	public renderToHtml(state: HtmlRenderState): HtmlElement {
 		return (
-			<span className="text">{this.text}</span>
+			<span className="text-span">{this.text}</span>
 		);
+	}
+	
+	public canInParagraph() { return true; }
+}
+
+@MyTemplateType()
+class LatexBlock extends Content {
+	@ImplicitTemplateField()
+	public code: string;
+	
+	public getLatexCode(): string { return this.code; }
+	
+	public renderToHtml(state: HtmlRenderState): HtmlElement {
+		return state.latexManager.renderLatex(this.getLatexCode(), false);
+	}
+	
+	public canInParagraph() { return false; }
+}
+
+@MyTemplateType()
+class Latex extends Content {
+	@ImplicitTemplateField()
+	public code: string;
+	
+	public getLatexCode(): string { return this.code; }
+	
+	public renderToHtml(state: HtmlRenderState): HtmlElement {
+		return state.latexManager.renderLatex(this.getLatexCode(), false);
 	}
 	
 	public canInParagraph() { return true; }
@@ -339,7 +352,7 @@ class ContentArray extends Content {
 				var lines = e.toString().split(/\r\n|\n/);
 
 				lines.forEach((line, position) => {
-					if ((line.trim() === "") && position != lines.length - 1)
+					if ((line.trim() === "") && position != lines.length - 1 && position != 0)
 						closePara();
 					else
 						curPara.push(<span>{line + "\n"}</span>);
@@ -371,3 +384,22 @@ class ContentArray extends Content {
 	public getChildren(): Content[] { return this.items; }
 }
 
+
+@MyTemplateType()
+class List extends Content {
+	
+	@ImplicitTemplateField()
+	public items: ContentArray;
+	
+	public renderToHtml(state: HtmlRenderState): HtmlElement {
+		return (
+			<ul>
+				{ this.items.getChildren().map(c => <li>{c.renderToHtml(state)}</li>) }
+			</ul>
+		);
+	}
+	
+	public canInParagraph() { return false; }
+	
+	public getChildren(): Content[] { return [ this.items ]; }
+}
