@@ -6,15 +6,19 @@ export function extend<T>(obj: any, parent: T): T {
 	return obj;
 }
 
+
 export function formatCode(code: string): string {
 	var codeLines = code.split(/\r\n|\n/);
 	var minWhitespaces = code.length;
+
+	const isWs = (s: string) => s == " ";
+
 
 	var start = -1;
 	var end = -1;
 	codeLines.forEach((line, idx) => {
 		var c = 0;
-		while (c <= line.length && line.charAt(c) === " ") { c++; }
+		while (c <= line.length && isWs(line.charAt(c))) { c++; }
 
 		if (c !== line.length) {
 			if (c < minWhitespaces) minWhitespaces = c;
@@ -28,7 +32,7 @@ export function formatCode(code: string): string {
 		if (idx < start || idx > end) return;
 
 		var c = 0;
-		while (c <= line.length && line.charAt(c) === " ") { c++; }
+		while (c <= line.length && isWs(line.charAt(c))) { c++; }
 
 		for (var i = minWhitespaces; i < line.length; i++) {
 			result += line.charAt(i);

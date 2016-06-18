@@ -1,0 +1,66 @@
+{!tyml 1.0
+	!ns:    <tyml.org/typedef/0.9>
+	!ns/t:  <tyml.org/types/0.9>
+    !ns/c:  <tyml.org/typedef/constraints/0.9>
+}
+
+{DefinitionPackage [
+	{NamespaceDefinition <t>
+		Types:[
+            {AliasDefinition <AnyType> {AnyType} Description:<Represents the root type "Any".>}
+			{AliasDefinition <String> {StringType} Description:<Represents the root type "String".>}
+			{AliasDefinition <Primitive> {PrimitiveType} Description:<Represents the root type "Primitive".>}
+			{AliasDefinition <Array> TypeParameters:[{$ <T>}] {ArrayType {TypeParameter <T>}} Description:<Represents the root type "Array".>}
+			{AliasDefinition <Object> {ObjectType} Description:<Represents the root type "Object".>}
+			
+
+			{PrimitiveTypeDefinition <Integer> c/Regex:<-?(0|[1-9][0-9]*)> Description:<Represents an integer.>}
+			{PrimitiveTypeDefinition <Int32> Extends:<t/Integer> c/MinValue:-2147483648 c/MaxValue:2147483647}
+
+
+			{PrimitiveTypeDefinition <Float> 
+				c/Regex:<f<[0-9]+(\.[0-9]+)>f> {-- e.g. 0.5 --} 
+			}
+			
+			{PrimitiveTypeDefinition <Boolean> Description:<Represents a boolean (true or false) value.> c/ValidValues:[
+				{$ <true> Description:<Represents the boolean true.>} 
+				{$ <false> Description:<Represents the boolean false.>} 
+			]}
+			
+			{StringTypeDefinition <Identifier> c/Regex:<[A-Za-z][A-Za-z0-9_]*>}
+			{StringTypeDefinition <NamespacePrefix> Extends:<t/Identifier>}
+
+			{StringTypeDefinition <NamespacedIdentifier> c/Regex:<([A-Za-z][A-Za-z0-9_]*/)?[A-Za-z][A-Za-z0-9_]*>}
+			
+			{PrimitiveTypeDefinition <Null> c/ValidValues:[<null>]}   
+			{AliasDefinition <Nullable> TypeParameters:[{$ <T>}] [<t/Null> {TypeParameter <T>}]}
+
+			{AliasDefinition <Union2> TypeParameters:[{$ <T1>} {$ <T2>}] [{$ <T1>} {$ <T2>}]}
+
+            {ObjectTypeDefinition <KeyValuePair> TypeParameters:[{$ <Key>} {$ <Value>}]
+                Attributes:[
+                    {$ <Key> Type:{TypeParameter <Key>}}
+                    {$ <Value> Type:{TypeParameter <Value>}}
+                ]
+            }
+
+            {StringTypeDefinition <Regex>}
+            
+            
+            {StringTypeDefinition <IPv4>}
+            {StringTypeDefinition <IPv6>}
+
+            {StringTypeDefinition <Guid>}
+
+            {StringTypeDefinition <Date>}
+            {StringTypeDefinition <Time>}
+            {StringTypeDefinition <DateTime>}
+            {StringTypeDefinition <Duration>}
+
+            {StringTypeDefinition <Weekday>}
+            {StringTypeDefinition <Month>}
+            {StringTypeDefinition <Year>}
+
+		]
+	}
+]}

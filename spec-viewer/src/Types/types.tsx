@@ -39,6 +39,8 @@ export abstract class Content {
 	}
 	
 	public getChildren(): Content[] { return []; }
+
+	public getDescendants(): Content[] { return [ this as Content ].concat(...this.getChildren().map(c => c.getDescendants())); }
 }
 
 @MyTemplateType()
@@ -190,7 +192,7 @@ class Property extends Content {
 
 
 @MyTemplateType()
-class Constraint extends Content {
+export class Constraint extends Content {
 	@ImplicitTemplateField()
 	public type: string;
 	
@@ -212,7 +214,7 @@ class Constraint extends Content {
 }
 
 @MyTemplateType()
-class Productions extends Content {
+export class Productions extends Content {
 	@ImplicitTemplateField()
 	public productions: string;
 	
@@ -248,6 +250,41 @@ class Productions extends Content {
 		lexer.readAllWithStr().filter(t => t.token == "DefinedIdentifier").forEach(t =>
 			refMngr.register(t.str));
 	}
+}
+
+
+@MyTemplateType()
+class TymlCode extends Content {
+	@ImplicitTemplateField()
+	public code: string;
+	
+	public renderToHtml(state: HtmlRenderState): HtmlElement {
+		
+		return (<div className="code">{formatCode(this.code)}</div>);
+	}
+	
+	public canInParagraph() { return false; }
+}
+
+@MyTemplateType()
+class Example extends Content {
+	@ImplicitTemplateField()
+	public title: string;
+
+	@ImplicitTemplateField()
+	public example: Content;
+	
+	public renderToHtml(state: HtmlRenderState): HtmlElement {
+		return (
+			<div className="panel definition">
+				<div className="panel-heading">Example: { this.title }</div>
+				<div className="panel-body">{ this.example.renderToHtml(state) }</div>	
+			</div>
+		);
+		
+	}
+	
+	public canInParagraph() { return false; }
 }
 
 @MyTemplateType()
@@ -292,7 +329,7 @@ class LatexBlock extends Content {
 	public getLatexCode(): string { return this.code; }
 	
 	public renderToHtml(state: HtmlRenderState): HtmlElement {
-		return state.latexManager.renderLatex(this.getLatexCode(), false);
+		return <div className="latex-block">{state.latexManager.renderLatex(this.getLatexCode(), false)}</div>;
 	}
 	
 	public canInParagraph() { return false; }
@@ -330,7 +367,7 @@ class ContentString extends Content {
 }
 
 @ArrayType(Content)
-class ContentArray extends Content {
+export class ContentArray extends Content {
 	constructor(private items: Content[]) {
 		super();
 	}
@@ -354,8 +391,12 @@ class ContentArray extends Content {
 				lines.forEach((line, position) => {
 					if ((line.trim() === "") && position != lines.length - 1 && position != 0)
 						closePara();
-					else
-						curPara.push(<span>{line + "\n"}</span>);
+					else {
+						let l = line;
+						if (position != lines.length - 1)
+							l += "\n";
+						curPara.push(<span>{l}</span>);
+					}
 
 					if ((line.trim() !== "" || position === 0) && line.indexOf("  ", line.length - 2) !== -1)
 						curPara.push(<br />);

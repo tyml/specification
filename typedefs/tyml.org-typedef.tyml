@@ -1,0 +1,195 @@
+{!tyml 1.0
+	!ns:    <tyml.org/typedef/0.9>
+	!ns/s:  <tyml.org/typedef/0.9>
+	!ns/t:  <tyml.org/types/0.9>
+	!ns/c:  <tyml.org/typedef/constraints/0.9>
+}
+
+{DefinitionPackage [
+	{NamespaceDefinition <c>
+		AttachableAttributes:[
+			{$  !arg/Type:<t/Regex> <Regex>
+				OwnerType:<s/StringOrPrimitiveType>
+				s/IsConstraint:true
+			}
+			{$  !arg/Type:{ArrayType [<t/String> <c/ValidValue>]} <ValidValues>
+				OwnerType:<s/StringOrPrimitiveTypeDefinition>
+				s/IsConstraint:true
+			}
+		]
+
+		Types:[
+			{ObjectTypeDefinition <ValidValue>
+				Attributes:[
+					{$ !arg/Type:<t/String> <Value> CanBeImplicit:true}
+					{$ !arg/Type:<t/String> <Description> DefaultValue:<>}
+				]
+			}
+		]
+	}
+	
+	{NamespaceDefinition <s>
+		AttachableAttributes:[
+			{AttachableAttribute !arg/Type:<t/Boolean> <IsConstraint> OwnerType:[<s/AttachableAttributeDefinition>]
+				Description:<Specifies whether the attachable attribute is applied to !arg/Type definitions to describe constraints.> 
+			}
+		]
+		Types:[
+
+            {PrimitiveTypeDefinition <NoDefaultValue> c/ValidValues:[{c/ValidValue <NoDefaultValue> 
+                Description:<States that there is no default value and a value must be assigned to the attribute.>}
+            ]}
+
+			{ObjectTypeDefinition <DefinitionPackage>
+				Attributes:[
+					{$ !arg/Type:{ArrayType <s/NamespaceDefinition>} <NamespaceDefinitions> 
+						CanBeImplicit:true
+						Description:<Contains all namespace definitions for this definition package.>
+					}
+				]
+			}
+			
+			{ObjectTypeDefinition <NamespaceDefinition>
+				Attributes:[
+					{$ !arg/Type:<t/NamespacePrefix> <Namespace> 
+                        CanBeImplicit:true 
+                        Description:<Specifies the namespace to be defined.>
+                    }
+					{$ !arg/Type:{ArrayType <s/TypeDefinition>} <Types> 
+                        DefaultValue:[]
+                        Description:<Contains all types that are defined in the specified namespace.>
+                    }
+					{$ !arg/Type:{ArrayType <s/AttachableAttributeDefinition>} 
+                        DefaultValue:[]
+                        Description:<Contains all attachable attributes that are defined in the specified namespace.>
+                    }
+				]
+			}
+			
+			{ObjectTypeDefinition <AttachableAttributeDefinition>
+                !arg/TypeParameters:[{$ <Type> Description:<Specifies the type of values that can be assigned to this attribute.>}]
+				Attributes:[
+					{$ !arg/Type:<t/String> <Name> CanBeImplicit:true Description:<Specifies the name of the attachable attribute.>}
+					{$ !arg/Type:<t/String> <Description> DefaultValue:<> Description:<Describes the attachable attribute.>}
+					{$ !arg/Type:[<s/TypeReference> <s/UnionType> <s/GenericType>] <OwnerType> Description:<Specifies the type that this attribute can be attached to.>}
+                    {$ !arg/Type:[<s/NoDefaultValue> {TypeParameter <Type>}] <DefaultValue> DefaultValue:{=s/NoDefaultValue NoDefaultValue}}
+				]
+			}
+			
+			{AliasDefinition <TypeDefinition> [
+				<s/ObjectTypeDefinition> 
+				<s/UnionTypeDefinition>
+				<s/ArrayTypeDefinition>
+				<s/StringTypeDefinition>
+				<s/PrimitiveTypeDefinition>
+			]}
+			
+			{PrimitiveTypeDefinition <ObjectKind> c/ValidValues:[<Abstract> <Extendable> <Final>]}
+
+            {ObjectTypeDefinition <Definition>
+				{$ !arg/Type:<t/Identifier> <Name> CanBeImplicit:true}
+				{$ !arg/Type:<t/String> <Description> DefaultValue:<>}
+            }
+			
+			{ObjectTypeDefinition <ObjectTypeDefinition> Extends:<s/Definition>
+				Attributes:[
+					{$ <Kind> !arg/Type:<s/ObjectKind> DefaultValue:Final}
+					{$ <TypeParameters> !arg/Type:{ArrayType <s/TypeParameterDefinition>} DefaultValue:[]}
+					{$ <Extends> !arg/Type:[<s/TypeReference> <s/GenericType>] DefaultValue:<t/Object>}
+                    {$ <Implements> !arg/Type:{ArrayType [<s/TypeReference> <s/GenericType>]} DefaultValue:[]}
+					{$ <Attributes> !arg/Type:{ArrayType <s/Attribute>} DefaultValue:[]}
+				]
+			}
+			
+			{ObjectTypeDefinition <TypeParameterDefinition>
+				Attributes:[
+					{$ !arg/Type:<t/Identifier> <Name> CanBeImplicit:true}
+					{$ !arg/Type:<t/String> <Description> DefaultValue:<>}
+					{-- {Attribute <Direction>} --}
+				]
+			}
+			
+			{ObjectTypeDefinition <Attribute>
+				Attributes:[
+					{$ !arg/Type:<t/Identifier> <Name> CanBeImplicit:true}
+					{$ !arg/Type:<t/String> <Description> DefaultValue:<>}
+					{$ !arg/Type:<s/Type> <Type>}
+					{$ !arg/Type:<t/Boolean> <CanBeImplicit> DefaultValue:false}
+					{$ !arg/Type:<t/AnyType> <DefaultValue> DefaultValue:NoDefaultValue}
+				]
+			}
+			
+			{ObjectTypeDefinition <AliasDefinition> Extends:<s/Definition>
+				Attributes:[
+					{$ !arg/Type:<s/Type> <Type> CanBeImplicit:true}
+                    {$ !arg/Type:{ArrayType <s/TypeParameter>} <TypeParameters> DefaultValue:[]}
+				]
+			}
+			
+			{ObjectTypeDefinition <ArrayTypeDefinition> Extends:<s/Definition>
+				Attributes:[
+					{$ !arg/Type:<s/Type> <ItemType> CanBeImplicit:true}
+					{$ !arg/Type:{ArrayType <s/TypeParameter>} <TypeParameters> DefaultValue:[]}
+				]
+			}
+
+			{ObjectTypeDefinition <StringTypeDefinition> Extends:<s/Definition>
+				Attributes:[
+					{$ !arg/Type:<t/TypeReference> <Extends> CanBeImplicit:true DefaultValue:<t/String>}
+				]
+			}
+
+			{ObjectTypeDefinition <PrimitiveTypeDefinition> Extends:<s/Definition>
+				Attributes:[
+					{$ !arg/Type:<t/TypeReference> <Extends> CanBeImplicit:true DefaultValue:<t/Primitive>}
+				]
+			}
+
+			{AliasDefinition <StringOrPrimitiveTypeDefinition> 
+				[<s/StringTypeDefinition> <s/PrimitiveTypeDefinition>]
+			}
+
+
+			{AliasDefinition <Type> [
+				<s/TypeReference>
+				<s/StringType>
+				<s/PrimitiveType>
+				<s/UnionType>
+				<s/ArrayType>
+				<s/TypeArgument>
+				<s/GenericType>
+				<s/ObjectType>
+				<s/AnyType>
+			]}
+			
+			{ArrayTypeDefinition <UnionType> ItemType:<s/Type>}
+
+			{StringTypeDefinition <TypeReference> Extends:<t/NamespacedIdentifier>}
+			
+			
+			{ObjectTypeDefinition <ArrayType>
+				Attributes:[
+					{Attribute <ItemType> !arg/Type:<s/Type> CanBeImplicit:true}
+				]
+			}
+			
+			{ObjectTypeDefinition <TypeParameter>
+				Attributes:[
+					{Attribute <Name> !arg/Type:<t/Identifier> CanBeImplicit:true}
+				]
+			}
+
+			{ObjectTypeDefinition <Instantiate>
+				Attributes:[
+					{Attribute <BaseType> !arg/Type:<s/TypeReference> CanBeImplicit:true}
+					{Attribute <TypeArguments> !arg/Type:{ArrayType <s/Type>} CanBeImplicit:true}
+				]
+			}
+			
+			{ObjectTypeDefinition <StringType>}
+			{ObjectTypeDefinition <PrimitiveType>}
+			{ObjectTypeDefinition <ObjectType>}
+			{ObjectTypeDefinition <AnyType>}
+		]
+	}
+]}

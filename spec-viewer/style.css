@@ -1,10 +1,25 @@
 .reference { font-style: italic }
 .keyword { font-weight: bold }
 
-pre { background-color: beige; padding: 10px; }
+pre { background-color: hsl(0, 0%, 92%); padding: 10px; }
+
+.code {
+    background-color: hsl(0, 0%, 92%); padding: 10px;
+    white-space: pre;
+    font-family: monospace;
+}
+
+
+.latex-block {
+    /* border: 1px solid grey;*/
+    background-color: hsl(0, 0%, 92%);
+    border-radius: 4px;
+    padding: 10px 15px;
+}
 
 .productions {
-    background-color: beige; padding: 10px;
+    background-color: hsl(0, 0%, 92%);
+    padding: 10px;
     white-space: pre;
     font-family: monospace;
 }
@@ -40,7 +55,7 @@ pre { background-color: beige; padding: 10px; }
 
 .text-span { 
     font-family: Courier New, Courier, monospace;
-    background-color: beige;
+    background-color: hsl(0, 0%, 92%);
     padding: 1px 3px;
 }
 
