@@ -1,8 +1,8 @@
 {!tyml 1.0}
 {Specification !ns:<tyml.org/spec/0.9>
-    Title:        <Tyml Specification 0.9 - Draft>
+    Title:<Tyml Specification 0.9 - Draft>
 
-    Content:    ![
+    Content:![
         {Section <Introduction> ![
             Tyml is a text based and typed markup and data description language that is meant to
             be an alternative to XML, JSON and YAML. Tyml is the abbreviation of Typed markup language.
