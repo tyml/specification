@@ -93,21 +93,14 @@
                     The text of {Reference <AnyText>} children MUST NOT contain {Text <->} followed by the {Reference <Delimiter>} and then by {Text <-}>}.
                 ]}
 
-                These productions form the leading and trailing trivia productions:
+                Trivias are a sequence of whitespaces or comments:
                 {Productions <<
-                    LdTrv  ::= (WS | Comment)+
-                    TrlTrv ::= (SingleLineWSChar | Comment)+
+                    Trivias  ::= (WS | Comment)+
                 >>}
-
-                {Constraint <Syntactical Correctness> ![
-                    The text of {Reference <LdTrv>} nodes must be as long as possible 
-                    whereas the text of {Reference <TrlTrv>} nodes must be as short as possible.
-                ]}
-
-                {Definition <Trivia> ![A {Keyword <Trivia>} is a {Reference <String>} that represents a sequence of whitespace or comments.]}
-
-                
-                If a {Reference <Tyml Processor>} stores {Reference <Trivias>}, {Reference <LdTrv>} nodes SHOULD be assigned to the terminal character or node that follows the trivia.
+{-todo-
+                If a {Reference <Tyml Processor>} stores {Reference <Trivias>}, 
+                they should be stor
+                {Reference <LdTrv>} nodes SHOULD be assigned to the terminal character or node that follows the trivia.
                 {Reference <TrlTrv>} nodes SHOULD be assigned to the terminal character or node that precedes the trivia.
 
                 {Example <Trivias> ![
@@ -123,12 +116,13 @@
                     belong to {Reference <Element2>}.
                     The Delimiter of {Reference <Comment3>} is {Text <txt>}, the text of its {Reference <AnyText>} child is {Text <Comment3--}>}.
                 ]}
-
+-todo-}
             ]}
 
 
             {Section <Namespace System> ![
-                Namespaces are used to avoid naming collisions. Since namespaces can become quite long, prefixes are used to shorten them:
+                Namespaces are used to avoid naming collisions. 
+                Since namespaces can become quite long, prefixes are used to shorten them:
                 {Productions <<
                     Namespace      ::= (Identifier "/")* Identifier
                     NonEmptyPrefix ::= Identifier
@@ -137,7 +131,7 @@
 
                 Such namespace prefixes can be defined by {Reference <PrefixDef+s>} nodes in the following way:
                 {Productions <<
-                    PrefixDef ::= '!ns' ('/' NonEmptyPrefix)? ':' TrlTrv? LdTrv? '<' Namespace '>'
+                    PrefixDef ::= '!ns' ('/' NonEmptyPrefix)? ':' Trivias? '<' Namespace '>'
                 >>}
 
                 {Property <PrefixDef> <Prefix> ![
@@ -197,7 +191,8 @@
             {Section <Tyml Documents> ![
 
                 {Definition <Tyml Document> ![
-                    A {Reference <String>} is called a {Keyword <Tyml Document>} iff it matches the production {Reference <RecognizedAsTymlDocument>}.
+                    A {Reference <String>} is called a {Keyword <Tyml Document>} 
+                    iff it matches the production {Reference <RecognizedAsTymlDocument>}.
                 ]}
 
                 {Productions <<
@@ -205,12 +200,15 @@
                 >>}
 
                 {Definition <Syntactically Correct> ![
-                    A {Reference <Tyml Document>} is called {Keyword <Syntactically Correct>} iff it matches the production {Reference <Document>} and 
-                    there is at least one Parse Tree that fulfills all {Reference <Syntactical Correctness>} constraints given in this specification.
+                    A {Reference <Tyml Document>} is called {Keyword <Syntactically Correct>} 
+                    iff it matches the production {Reference <Document>} and 
+                    there is at least one Parse Tree that fulfills all {Reference <Syntactical Correctness>} 
+                    constraints given in this specification.
                 ]}
 
                 {Definition <Logical Tree> ![
-                    The syntactical correctness constraints ensure that {Reference <Syntactically Correct>} {Reference <Tyml Document+s>} have exactly one Parse Tree.
+                    The syntactical correctness constraints ensure that 
+                    {Reference <Syntactically Correct>} {Reference <Tyml Document+s>} have exactly one Parse Tree.
                     This tree is called the {Keyword <Logical Tree>} of the {Reference <Tyml Document>}.
                 ]}
 
@@ -220,7 +218,7 @@
                 ]}
 
                 {Productions <<
-                    Document ::= (Header TrlTrv?) (LdTrv? Object TrlTrv?)* LdTrv?
+                    Document ::= Header (Trivias? Object)* Trivias?
                 >>}
 
 
@@ -228,16 +226,16 @@
                 Document nodes use the Header child for resolving prefixes.
                 The header is defined as follows:
                 {Productions <<
-                    Header ::= '{!tyml 0.9' (TrlTrv LdTrv? PrefixDef)* 
-                                            (TrlTrv LdTrv? AliasDef)* 
-                                            (TrlTrv LdTrv? HeaderAttr)* TrlTrv? LdTrv? '}'
+                    Header ::= '{!tyml 0.9' (Trivias PrefixDef)* 
+                                            (Trivias AliasDef)* 
+                                            (Trivias HeaderAttr)* Trivias? '}'
                 >>}
                 Later versions of Tyml will not change the {Reference <RecognizedAsTymlDocument>} production but will increase the header's version number.
                 For future Tyml 1.0 documents however, the version will be optional and a non-digit char will follow instead.
 
                 Alias definitions can be used to shorten object types. They are defined as follows:
                 {Productions <<
-                    AliasDef ::= '!alias/#' AliasName ':' TrlTrv? LdTrv? '<' TypeName '>'
+                    AliasDef ::= '!alias/#' AliasName ':' Trivias? '<' TypeName '>'
                     AliasName ::= Identifier
                 >>}
 
@@ -250,7 +248,7 @@
 
                 Header attributes are defined as following:
                 {Productions <<
-                    HeaderAttr ::= HeaderAttrName ':' TrlTrv? LdTrv? AttributeValue
+                    HeaderAttr ::= HeaderAttrName ':' Trivias? AttributeValue
                     HeaderAttrName ::= Identifier
                     AttributeValue ::= Expression
                 >>}
@@ -303,7 +301,8 @@
                         >>}
 
                         {Property <OrdinaryString> <Value> ![
-                            The {Reference <Value>} of an ordinary string is the concatenation of the {Reference <Value+s>} from all its children.
+                            The {Reference <Value>} of an ordinary string is the concatenation of the 
+                            {Reference <Value+s>} from all its children.
                         ]}
                     
                         The {Reference <Value>} of an ordinary string char is its text.
@@ -380,14 +379,15 @@
                 {Section <Objects> ![
                     Objects can compose other elements by using attributes. They have the following structure:
                     {Productions <<
-                        Object  ::= '{' ObjType (TrlTrv LdTrv? PrefixDef)* (TrlTrv LdTrv? Attribute)* TrlTrv? LdTrv? '}'
+                        Object  ::= '{' ObjType (Trivias PrefixDef)* (Trivias Attribute)* Trivias? '}'
                         ObjType ::= (CastCharacter? (TypeName | '#' AliasName)) | InferenceCharacter
                         CastCharacter ::= '='
                         InferenceCharacter ::= '$'
                     >>}
 
                     {Constraint <Well-formedness> ![
-                        An {Reference <AliasName>} child of an {Reference <ObjType>} must be defined by a corresponding {Reference <AliasDef>} element.
+                        An {Reference <AliasName>} child of an {Reference <ObjType>} must be defined by
+                        a corresponding {Reference <AliasDef>} element.
                     ]}
 
                     {Definition <Cast Object> ![
@@ -395,14 +395,16 @@
                     ]}
 
                     {Definition <Inference Object> ![
-                        The parent {Reference <Object>} of a {Reference <InferenceCharacter>} node is called {Keyword <Inference Object>}.
+                        The parent {Reference <Object>} of a {Reference <InferenceCharacter>} node 
+                        is called {Keyword <Inference Object>}.
                     ]}
 
                     {Property <Object> <Qualified Type Name> ![
                         Each {Reference <Object>} that is not an {Reference <Inference Object>} has a qualified type name.
                         If the {Reference <ObjType>} child has a {Reference <TypeName>} child, its qualified type name is used.
                         Otherwise, if the {Reference <ObjType>} has an {Reference <AliasName>} child, 
-                        the qualified type name is used that is assigned to the alias name by the corresponding {Reference <AliasDef>} element. 
+                        the qualified type name is used that is assigned to the alias name 
+                        by the corresponding {Reference <AliasDef>} element. 
                     ]}
 
                     {Example <Cast Object, Qualified Type Name> ![
@@ -420,7 +422,7 @@
                     {Productions <<
                         Attribute         ::= ImplicitAttribute | ExplicitAttribute
                         ImplicitAttribute ::= AttributeValue
-                        ExplicitAttribute ::= AttributeName ':' TrlTrv? LdTrv? AttributeValue
+                        ExplicitAttribute ::= AttributeName ':' Trivias? AttributeValue
                     >>}
 
                     An {Reference <AttributeName>} is defined similar to {Reference <TypeName>}, however its prefix can be empty:
@@ -439,17 +441,22 @@
                     ]}
 
                     {Property <AttributeName> <Qualified Attribute Name> ![
-                        An {Reference <AttributeName>} resolves to a {Reference <QualifiedAttrName>} with a matching local attribute name.
+                        An {Reference <AttributeName>} resolves to 
+                        a {Reference <QualifiedAttrName>} with a matching local attribute name.
                     ]}
 
                     {Definition <Ordinary Attribute> ![
-                        If the prefix of an {Reference <AttributeName>} is {Null}, its parent {Reference <ExplicitAttribute>} is called {Keyword <Ordinary Attribute>}.
-                        In this case, the qualified type name of the parent {Reference <Object>} is used as {Reference <QualifiedTypeName>} child for the qualified attribute name.
+                        If the prefix of an {Reference <AttributeName>} is {Null}, 
+                        its parent {Reference <ExplicitAttribute>} is called {Keyword <Ordinary Attribute>}.
+                        In this case, the qualified type name of the parent {Reference <Object>} 
+                        is used as {Reference <QualifiedTypeName>} child for the qualified attribute name.
                     ]}
                     
                     {Definition <Attached Attribute> ![
-                        Otherwise, if the prefix is not {Null}, its parent {Reference <ExplicitAttribute>} is called {Keyword <Attached Attribute>}.
-                        In that case, the namespace the prefix is resolved to is used as {Reference <Namespace>} child for the qualified attribute name.
+                        Otherwise, if the prefix is not {Null}, 
+                        its parent {Reference <ExplicitAttribute>} is called {Keyword <Attached Attribute>}.
+                        In that case, the namespace the prefix is resolved to is used as 
+                        {Reference <Namespace>} child for the qualified attribute name.
                     ]}
 
                     {Example <Attributes> ![
@@ -479,7 +486,7 @@
 
                     Ordinary arrays are specified as follows:
                     {Productions <<
-                        OrdinaryArray ::= '[' Expression? (TrlTrv LdTrv? Expression)* TrlTrv? LdTrv? ']'
+                        OrdinaryArray ::= '[' Expression? (Trivias Expression)* Trivias? ']'
                     >>}
 
                     The following production rules describe markup arrays:
@@ -489,7 +496,7 @@
                         MarkupStringChar ::= Char \ ([\<>{}] | '[' | ']')
                         MarkupString     ::= (MarkupStringChar | EscapeSequence)*
                     >>}
-                    Hence all whitespace characters within markup arrays are interpreted as markup strings.
+                    Hence, all whitespace characters within markup arrays are interpreted as markup strings.
 
                     {Example <Array vs. Markup Array> ![
                         {TymlCode <<
