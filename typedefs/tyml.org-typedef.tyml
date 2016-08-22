@@ -36,9 +36,9 @@
 		]
 		Types:[
 
-            {PrimitiveTypeDefinition <NoDefaultValue> c/ValidValues:[{c/ValidValue <NoDefaultValue> 
-                Description:<States that there is no default value and a value must be assigned to the attribute.>}
-            ]}
+			{PrimitiveTypeDefinition <NoDefaultValue> c/ValidValues:[{c/ValidValue <NoDefaultValue> 
+				Description:<States that there is no default value and a value must be assigned to the attribute.>}
+			]}
 
 			{ObjectTypeDefinition <DefinitionPackage>
 				Attributes:[
@@ -52,27 +52,27 @@
 			{ObjectTypeDefinition <NamespaceDefinition>
 				Attributes:[
 					{$ !arg/Type:<t/NamespacePrefix> <Namespace> 
-                        CanBeImplicit:true 
-                        Description:<Specifies the namespace to be defined.>
-                    }
+						CanBeImplicit:true 
+						Description:<Specifies the namespace to be defined.>
+					}
 					{$ !arg/Type:{ArrayType <s/TypeDefinition>} <Types> 
-                        DefaultValue:[]
-                        Description:<Contains all types that are defined in the specified namespace.>
-                    }
+						DefaultValue:[]
+						Description:<Contains all types that are defined in the specified namespace.>
+					}
 					{$ !arg/Type:{ArrayType <s/AttachableAttributeDefinition>} 
-                        DefaultValue:[]
-                        Description:<Contains all attachable attributes that are defined in the specified namespace.>
-                    }
+						DefaultValue:[]
+						Description:<Contains all attachable attributes that are defined in the specified namespace.>
+					}
 				]
 			}
 			
 			{ObjectTypeDefinition <AttachableAttributeDefinition>
-                !arg/TypeParameters:[{$ <Type> Description:<Specifies the type of values that can be assigned to this attribute.>}]
+				!arg/TypeParameters:[{$ <Type> Description:<Specifies the type of values that can be assigned to this attribute.>}]
 				Attributes:[
 					{$ !arg/Type:<t/String> <Name> CanBeImplicit:true Description:<Specifies the name of the attachable attribute.>}
 					{$ !arg/Type:<t/String> <Description> DefaultValue:<> Description:<Describes the attachable attribute.>}
 					{$ !arg/Type:[<s/TypeReference> <s/UnionType> <s/GenericType>] <OwnerType> Description:<Specifies the type that this attribute can be attached to.>}
-                    {$ !arg/Type:[<s/NoDefaultValue> {TypeParameter <Type>}] <DefaultValue> DefaultValue:{=s/NoDefaultValue NoDefaultValue}}
+					{$ !arg/Type:[<s/NoDefaultValue> {TypeParameter <Type>}] <DefaultValue> DefaultValue:{=s/NoDefaultValue NoDefaultValue}}
 				]
 			}
 			
@@ -83,21 +83,22 @@
 				<s/StringTypeDefinition>
 				<s/PrimitiveTypeDefinition>
 			]}
+
 			
 			{PrimitiveTypeDefinition <ObjectKind> c/ValidValues:[<Abstract> <Extendable> <Final>]}
 
-            {ObjectTypeDefinition <Definition>
-				{$ !arg/Type:<t/Identifier> <Name> CanBeImplicit:true}
-				{$ !arg/Type:<t/String> <Description> DefaultValue:<>}
-            }
+			{ObjectTypeDefinition <Definition>
+				{$ !arg/Type:<t/Identifier>	<Name> CanBeImplicit:true}
+				{$ !arg/Type:<t/String>		<Description> DefaultValue:<>}
+			}
 			
 			{ObjectTypeDefinition <ObjectTypeDefinition> Extends:<s/Definition>
 				Attributes:[
 					{$ <Kind> !arg/Type:<s/ObjectKind> DefaultValue:Final}
-					{$ <TypeParameters> !arg/Type:{ArrayType <s/TypeParameterDefinition>} DefaultValue:[]}
-					{$ <Extends> !arg/Type:[<s/TypeReference> <s/GenericType>] DefaultValue:<t/Object>}
-                    {$ <Implements> !arg/Type:{ArrayType [<s/TypeReference> <s/GenericType>]} DefaultValue:[]}
-					{$ <Attributes> !arg/Type:{ArrayType <s/Attribute>} DefaultValue:[]}
+					{$ <TypeParameters>	!arg/Type:{ArrayType <s/TypeParameterDefinition>} DefaultValue:[]}
+					{$ <Extends>		!arg/Type:[<s/TypeReference> <s/GenericType>] DefaultValue:<t/Object>}
+					{$ <Implements>		!arg/Type:{ArrayType [<s/TypeReference> <s/GenericType>]} DefaultValue:[]}
+					{$ <Attributes>		!arg/Type:{ArrayType <s/Attribute>} DefaultValue:[]}
 				]
 			}
 			
@@ -122,7 +123,7 @@
 			{ObjectTypeDefinition <AliasDefinition> Extends:<s/Definition>
 				Attributes:[
 					{$ !arg/Type:<s/Type> <Type> CanBeImplicit:true}
-                    {$ !arg/Type:{ArrayType <s/TypeParameter>} <TypeParameters> DefaultValue:[]}
+					{$ !arg/Type:{ArrayType <s/TypeParameter>} <TypeParameters> DefaultValue:[]}
 				]
 			}
 			
