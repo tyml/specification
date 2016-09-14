@@ -1,0 +1,74 @@
+﻿{!tyml 0.9
+	!ns:    <tyml.org/typedef/0.9>
+	!ns/t:  <tyml.org/types/0.9>
+	!ns/c:  <tyml.org/typedef/constraints/0.9>
+	!ns/tns:<some.site.somewhere/fstab/1.0>
+}
+{DefinitionPackage [
+	{NamespaceDefinition <tns>  
+		Types:[
+			{ObjectTypeDefinition <FStabConfig>
+				Attributes:[{$ !arg/Type:{ArrayType <tns/FStabEntry>} <Items> CanBeImplicit:true}]
+			}
+
+			{PrimitiveTypeDefinition <FSType> c/ValidValues:[<ext3> <ext4> <btrfs>]}
+
+			{ArrayTypeDefinition <Options> ItemType:<t/String> c/UniqueItems:true
+			}
+
+			{ObjectTypeDefinition <FStabEntry>
+				Description:<Schema for an fstab entry>
+				Attributes:[
+					{$ !arg/Type:<t/String> <MountPoint> CanBeImplicit:true}
+					{$ !arg/Type:[
+							<tns/DiskDevice> 
+							<tns/DiskUUID>
+							<tns/NFS>
+							<tns/TmpFS>
+						] <Storage>
+					}
+					{$ !arg/Type:[<tns/FSType> <t/Undefined>] <FSType> DefaultValue:undefined}
+					{$ !arg/Type:<Options> <tns/Options> DefaultValue:[]}
+					{$ !arg/Type:<t/Boolean> <Readonly> DefaultValue:false}
+				]
+			}
+			
+			{ObjectTypeDefinition <DiskDevice>
+				Attributes:[
+					{$ !arg/Type:<t/String> <Device> CanBeImplicit:true}
+				]
+			}
+
+			{StringTypeDefinition <UUID>
+				c/Regex:<[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]\
+									{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}>
+			}
+
+			{ObjectTypeDefinition <DiskUUID>
+				Attributes:[
+					{$ !arg/Type:<tns/UUID> <Label>}
+				]
+			}
+
+			{StringTypeDefinition <RemotePath> c/Regex:<^(/[^/]+)+$>}
+			
+			{ObjectTypeDefinition <NFS>
+				Attributes:[
+					{$ <RemotePath> !arg/Type:<tns/RemotePath>}
+					{$ <Server> !arg/Type:<t/String>}
+					{-- {Attribute <Server> Type:[<net/IPv4> <net/IPv6> <net/HostName>]} --}
+				]    
+			}
+
+			{PrimitiveTypeDefinition <TmpFSSize> Extends:<t/Integer>
+				c/MinValue:16 c/MaxValue:512
+			}
+
+			{ObjectTypeDefinition <TmpFS>
+				Attributes:[
+					{$ !arg/Type:<TmpFSSize> <SizeInMb>}
+				]
+			}
+		]
+	}
+]}

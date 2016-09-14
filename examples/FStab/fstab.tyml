@@ -1,0 +1,22 @@
+﻿{!tyml 0.9 !ns:<some.site.somewhere/fstab/1.0>}
+{FStabConfig [
+	{FStabEntry </>
+		Storage:	{DiskDevice </dev/sda1>}
+		FSType:		Btrfs
+		Readonly:	true
+	}
+	{FStabEntry </var>
+		Storage:	{DiskUUID <8f3ba6f4-5c70-46ec-83af-0d5434953e5f>}
+		FSType:		Ext4
+		Options:	[<nosuid>]
+	}
+	{FStabEntry </tmp>
+		Storage:	{TmpFS SizeInMb:64}
+	}
+	{FStabEntry </var/www>
+		Storage:	{NFS
+			Server:		<my.nfs.server>
+			RemotePath:	</exports/mypath>
+		}
+	}
+]}

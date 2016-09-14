@@ -1,18 +1,18 @@
-{!tyml 1.0
+{!tyml 0.9
 	!ns:    <tyml.org/typedef/0.9>
 	!ns/s:  <tyml.org/typedef/0.9>
 	!ns/t:  <tyml.org/types/0.9>
 	!ns/c:  <tyml.org/typedef/constraints/0.9>
 }
-
 {DefinitionPackage [
 	{NamespaceDefinition <c>
 		AttachableAttributes:[
-			{$  !arg/Type:<t/Regex> <Regex>
-				OwnerType:<s/StringOrPrimitiveType>
+			{$ !arg/Type:<t/Regex> <Regex>
+				OwnerType:<s/StringOrPrimitiveTypeDefinition>
+				{-- s/ConstraintFor:[<String> <PrimitiveType>] --}
 				s/IsConstraint:true
 			}
-			{$  !arg/Type:{ArrayType [<t/String> <c/ValidValue>]} <ValidValues>
+			{$ !arg/Type:{ArrayType [<t/String> <c/ValidValue>]} <ValidValues>
 				OwnerType:<s/StringOrPrimitiveTypeDefinition>
 				s/IsConstraint:true
 			}
@@ -30,8 +30,8 @@
 	
 	{NamespaceDefinition <s>
 		AttachableAttributes:[
-			{AttachableAttribute !arg/Type:<t/Boolean> <IsConstraint> OwnerType:[<s/AttachableAttributeDefinition>]
-				Description:<Specifies whether the attachable attribute is applied to !arg/Type definitions to describe constraints.> 
+			{AttachableAttribute !arg/Type:<s/Type> <IsConstraint> OwnerType:[<s/AttachableAttributeDefinition>]
+				Description:<Specifies that the owning attachable attribute specifies constraints for a given type.> 
 			}
 		]
 		Types:[
@@ -67,7 +67,7 @@
 			}
 			
 			{ObjectTypeDefinition <AttachableAttributeDefinition>
-				!arg/TypeParameters:[{$ <Type> Description:<Specifies the type of values that can be assigned to this attribute.>}]
+				TypeParameters:[{$ <Type> Description:<Specifies the type of values that can be assigned to this attribute.>}]
 				Attributes:[
 					{$ !arg/Type:<t/String> <Name> CanBeImplicit:true Description:<Specifies the name of the attachable attribute.>}
 					{$ !arg/Type:<t/String> <Description> DefaultValue:<> Description:<Describes the attachable attribute.>}
@@ -85,7 +85,7 @@
 			]}
 
 			
-			{PrimitiveTypeDefinition <ObjectKind> c/ValidValues:[<Abstract> <Extendable> <Final>]}
+			{PrimitiveTypeDefinition <Variance> c/ValidValues:[<Abstract> <Extendable> <Final>]}
 
 			{ObjectTypeDefinition <Definition>
 				{$ !arg/Type:<t/Identifier>	<Name> CanBeImplicit:true}
@@ -102,11 +102,13 @@
 				]
 			}
 			
+			{PrimitiveTypeDefinition <ObjectKind> c/ValidValues:[<In> <Out> <InOut>]}
+
 			{ObjectTypeDefinition <TypeParameterDefinition>
 				Attributes:[
 					{$ !arg/Type:<t/Identifier> <Name> CanBeImplicit:true}
 					{$ !arg/Type:<t/String> <Description> DefaultValue:<>}
-					{-- {Attribute <Direction>} --}
+					{$ !arg/Type:<t/Variance> <Variance> DefaultValue:InOut}
 				]
 			}
 			

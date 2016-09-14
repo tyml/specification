@@ -26,28 +26,40 @@ The following document provides an insight into the syntax of Tyml and
 demonstrates how tyml could be used to describe a simple contact book by using all essential language features:
 
 ```tyml
-{!tyml !ns:<http://schema.tyml.org/examples/contact-book>} 
-{-- UTF-8 encoding is the default encoding --}
-{ContactBook !ns/ext:<http://schema.tyml.org/examples/contact-book-ext>
-    {-- The whitespace after "\" and the backslash itself will be removed --}
-    Name:<Initiators and developers of tyml, \
-          the Typed Markup Language>
-    Description:![ 
-        {-- This is a markup array, text can be mixed with objects --}
-        This {Keyword <contact book>} lists the initiators of tyml.
-    ]
-    Contacts:[ 
-        {-- This is an array of elements --}
-        {Contact <Henning Dieterichs> {-- This is an implicit attribute --}
-            Mail:         <henning.dieterichs@tyml.org>
-            {-- The html text attribute is defined in another schema --}
-            ext/HtmlText: <txt<<b>Hello</b> World!>txt>
-        }
-        {Contact <Robin Rüde>
-            Mail:         <robin.ruede@tyml.org>
-            ext/HtmlText: <txt<<b>Hello</b> World!>txt>
-        }
-    ]
+{!tyml 0.9 !ns:<tyml.org/examples/contact-book>} 
+{-- Tyml documents are UTF-8 encoded --}
+{ContactBook !ns/ext:<tyml.org/examples/contact-book-ext>
+	{-- The whitespace after "\" and the backslash itself will be removed --}
+	Name:<Initiators and developers of tyml, \
+			the Typed Markup Language>
+	SomeValues:[
+		10 {-- Tyml primitives are unified, 10, true and high are not treated differently --}
+		true
+		{=ext/Importance {-- high is casted as "Importance". This is required if the type cannot be inferred. --}
+			high
+		}
+	]
+	Description:![
+		{-- This is a markup array (introduced by "!["), text can be mixed with objects --}
+		This {Keyword <contact book>} lists the initiators of tyml.
+	]
+	Contacts:[
+		{-- This is an array of elements --}
+		{Contact <Henning Dieterichs> {-- This is an implicit attribute --}
+			Mail:	<henning.dieterichs@tyml.org>
+			{-- The html text attribute is not defined in 'Contact', but externally --}
+			ext/HtmlText: <delimiter123<<b>Hello</b> World!>delimiter123>
+			{-delimiter456- 
+				Tyml supports delimited strings and comments,
+				so that comments can contain comments: {-- --} 
+			-delimiter456-}
+		}
+		{$ {!-- Contact type is inferred --}
+			<Robin Rüde>
+			Mail:         <robin.ruede@tyml.org>
+			ext/HtmlText: <txt<<b>Hello</b> World!>txt>
+		}
+	]
 }
 ```
 

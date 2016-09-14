@@ -1,13 +1,13 @@
-{!tyml 1.0
+{!tyml 0.9
 	!ns:    <tyml.org/typedef/0.9>
 	!ns/t:  <tyml.org/types/0.9>
-    !ns/c:  <tyml.org/typedef/constraints/0.9>
+	!ns/c:  <tyml.org/typedef/constraints/0.9>
 }
 
 {DefinitionPackage [
 	{NamespaceDefinition <t>
 		Types:[
-            {AliasDefinition <AnyType> {AnyType} Description:<Represents the root type "Any".>}
+			{AliasDefinition <AnyType> {AnyType} Description:<Represents the root type "Any".>}
 			{AliasDefinition <String> {StringType} Description:<Represents the root type "String".>}
 			{AliasDefinition <Primitive> {PrimitiveType} Description:<Represents the root type "Primitive".>}
 			{AliasDefinition <Array> TypeParameters:[{$ <T>}] {ArrayType {TypeParameter <T>}} Description:<Represents the root type "Array".>}
@@ -32,34 +32,50 @@
 
 			{StringTypeDefinition <NamespacedIdentifier> c/Regex:<([A-Za-z][A-Za-z0-9_]*/)?[A-Za-z][A-Za-z0-9_]*>}
 			
+			{PrimitiveTypeDefinition <Undefined> c/ValidValues:[<undefined>]}   
+			{AliasDefinition <Optional> TypeParameters:[{$ <T>}] [<t/Undefined> {TypeParameter <T>}]}
+
 			{PrimitiveTypeDefinition <Null> c/ValidValues:[<null>]}   
 			{AliasDefinition <Nullable> TypeParameters:[{$ <T>}] [<t/Null> {TypeParameter <T>}]}
 
 			{AliasDefinition <Union2> TypeParameters:[{$ <T1>} {$ <T2>}] [{$ <T1>} {$ <T2>}]}
 
-            {ObjectTypeDefinition <KeyValuePair> TypeParameters:[{$ <Key>} {$ <Value>}]
-                Attributes:[
-                    {$ <Key> Type:{TypeParameter <Key>}}
-                    {$ <Value> Type:{TypeParameter <Value>}}
-                ]
-            }
+			{ObjectTypeDefinition <KeyValuePair> TypeParameters:[{$ <Key>} {$ <Value>}]
+				Attributes:[
+					{$ <Key> Type:{TypeParameter <Key>}}
+					{$ <Value> Type:{TypeParameter <Value>}}
+				]
+			}
 
-            {StringTypeDefinition <Regex>}
-            
-            
-            {StringTypeDefinition <IPv4>}
-            {StringTypeDefinition <IPv6>}
+			{-- TODO --}
+			{StringTypeDefinition <AbsoluteDirectoryPath>}	{-- C:\test\, /test/ --}
+			{StringTypeDefinition <AbsoluteFilePath>}		{-- C:\test \test --}
+			{StringTypeDefinition <RelativeDirectoryPath>}	{-- test, .\test, ./test --}
+			{StringTypeDefinition <RelativeFilePath>}		{-- test/, test\ --}
 
-            {StringTypeDefinition <Guid>}
+			{StringTypeDefinition <Color>}
 
-            {StringTypeDefinition <Date>}
-            {StringTypeDefinition <Time>}
-            {StringTypeDefinition <DateTime>}
-            {StringTypeDefinition <Duration>}
+			{StringTypeDefinition <Regex>}
+			
+			{StringTypeDefinition <EMailAddress>}
+			{StringTypeDefinition <PhoneNumber>}
 
-            {StringTypeDefinition <Weekday>}
-            {StringTypeDefinition <Month>}
-            {StringTypeDefinition <Year>}
+			{StringTypeDefinition <Url>}
+			{StringTypeDefinition <Domain>}
+			
+			{StringTypeDefinition <IPv4>}
+			{StringTypeDefinition <IPv6>}
+
+			{StringTypeDefinition <Guid>}
+
+			{StringTypeDefinition <Date>}
+			{StringTypeDefinition <Time>}
+			{StringTypeDefinition <DateTime>}
+			{StringTypeDefinition <Duration>}
+
+			{StringTypeDefinition <Weekday>}
+			{StringTypeDefinition <Month>}
+			{StringTypeDefinition <Year>}
 
 		]
 	}
