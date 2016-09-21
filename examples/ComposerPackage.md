@@ -10,23 +10,23 @@ Composer Package
     Keywords:       [<expect> <assert> <assertion> <validation> 
                      <argument> <exception> <precondition> <invariant>]
     License:        <MIT>
-    Authors: [
+    Authors:[
         {Developer <Henning Dieterichs> 
-            Email:  <henning.dieterichs@hediet.de>
+            Email: <henning.dieterichs@hediet.de>
         }
     ]
-    Support: {Support
+    Support:{$
         Email:  <phpexpect@hediet.de> 
         Source: <https://bitbucket.org/nunzion/php-expect>
     }
-    Autoload: [
+    Autoload:[
         {Psr0NamespaceMapping Namespace:<Nunzion> Directory:<src/>}
     ]
-    Archive: {ArchiveConfig
-        Exclude:    [</nbproject>]
+    Archive:{$
+        Exclude:[</nbproject>]
     }
-    Require: [
-        {Dep <php> Version:<\>=5.3.0>
+    Require:[
+        {$ <php> Version:<\>=5.3.0>}
     ]
 }
 ```
