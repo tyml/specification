@@ -54,7 +54,7 @@ demonstrates how tyml could be used to describe a simple contact book by using a
 				so that comments can contain comments: {-- --} 
 			-delimiter456-}
 		}
-		{$ {!-- Contact type is inferred --}
+		{$ {-- Contact type is inferred --}
 			<Robin Rüde>
 			Mail:         <robin.ruede@tyml.org>
 			ext/HtmlText: <txt<<b>Hello</b> World!>txt>
