@@ -1,4 +1,5 @@
-import { Type, TypeSystem, NamespacedIdentifier, ObjectType, StringType, ArrayType, PrimitiveType, UnionType } from "./TypeSystem/AbstractTypeSystem.ts";
+import { Type, TypeSystem, NamespacedIdentifier, ObjectType, StringType, ArrayType, PrimitiveType, UnionType } from "./TypeSystem/AbstractTypeSystem";
+import * as Tyml2 from "../../tyml-parser/tyml";
 
 export class Deserializer {
 	
@@ -8,7 +9,7 @@ export class Deserializer {
 	
 	public deserialize(tymlDoc: string): any {
 		
-		const p = new Tyml.Parser.Parser();
+		const p = new Tyml2.Parser.Parser();
 		const parseResult = p.parse(tymlDoc);
 		const doc = parseResult.getDocument(); 
 		
@@ -157,6 +158,9 @@ class DeserializerVisitor extends AstVisitor<Arg, any> {
 
 	private getType(identifier: Tyml.Ast.TymlTypeIdentifier): Type {
 		const type = this.typeSystem.getType(new NamespacedIdentifier(identifier.getNamespace(), identifier.getName()));
+		if (!type) {
+			throw new Error("Could not find type " + identifier.getFullQualifiedName());
+		}
 		return type;
 	}
 

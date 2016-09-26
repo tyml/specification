@@ -2318,3 +2318,5 @@ var Tyml;
 ///<reference path="Transformer/PrettyprintTransformer.ts"/>
 ///<reference path="Transformer/TexTransformer.ts"/>
 //# sourceMappingURL=tyml.js.map
+
+module.exports = Tyml;

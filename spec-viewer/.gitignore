@@ -1,2 +1,3 @@
-jspm_packages/
-typings/
+dist-cli/
+dist-website/
+node_modules/

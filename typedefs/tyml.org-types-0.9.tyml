@@ -7,7 +7,7 @@
 {DefinitionPackage [
 	{NamespaceDefinition <t>
 		Types:[
-			{AliasDefinition <AnyType> {AnyType} Description:<Represents the root type "Any".>}
+			{AliasDefinition <Any> {AnyType} Description:<Represents the root type "Any".>}
 			{AliasDefinition <String> {StringType} Description:<Represents the root type "String".>}
 			{AliasDefinition <Primitive> {PrimitiveType} Description:<Represents the root type "Primitive".>}
 			{AliasDefinition <Array> TypeParameters:[{$ <T>}] {ArrayType {TypeParameter <T>}} Description:<Represents the root type "Array".>}

@@ -1,5 +1,5 @@
-import { HtmlElement } from "./Utils.ts";
-import Katex from "katex";
+import { HtmlElement } from "./Utils";
+import * as Katex from "katex";
 import * as React from "react";
 
 export class LatexManager {

@@ -1,9 +1,9 @@
-import { TemplateField, TemplateType, ArrayType, StringType, UnionType, FieldOptions, ImplicitTemplateField } from "../Helper/Annotations.ts";
+import { TemplateField, TemplateType, ArrayType, StringType, UnionType, FieldOptions, ImplicitTemplateField } from "../Helper/Annotations";
 import * as React from "react";
-import { EglLexerFactory } from "../Helper/EglLexer.ts";
-import { ReferenceManager } from "./ReferenceManager.ts";
-import { LatexManager } from "./LatexManager.tsx";
-import { HtmlElement, elToArr, extend, formatCode } from "./Utils.ts";
+import { EglLexerFactory } from "../Helper/EglLexer";
+import { ReferenceManager } from "./ReferenceManager";
+import { LatexManager } from "./LatexManager";
+import { HtmlElement, elToArr, extend, formatCode } from "./Utils";
 import { Promise } from "es6-promise";
 
 

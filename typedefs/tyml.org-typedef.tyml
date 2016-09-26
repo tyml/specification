@@ -8,21 +8,20 @@
 	{NamespaceDefinition <c>
 		AttachableAttributes:[
 			{$ !arg/Type:<t/Regex> <Regex>
-				OwnerType:<s/StringOrPrimitiveTypeDefinition>
-				{-- s/ConstraintFor:[<String> <PrimitiveType>] --}
-				s/IsConstraint:true
+				OwnerType:<s/TypeDefinition>
+				s/ConstraintFor:[<t/String> <t/PrimitiveType>]
 			}
 			{$ !arg/Type:{ArrayType [<t/String> <c/ValidValue>]} <ValidValues>
-				OwnerType:<s/StringOrPrimitiveTypeDefinition>
-				s/IsConstraint:true
+				OwnerType:<s/TypeDefinition>
+				s/ConstraintFor:[<t/String> <t/PrimitiveType>]
 			}
 		]
 
 		Types:[
 			{ObjectTypeDefinition <ValidValue>
 				Attributes:[
-					{$ !arg/Type:<t/String> <Value> CanBeImplicit:true}
-					{$ !arg/Type:<t/String> <Description> DefaultValue:<>}
+					{$ !arg/Type:<t/String>	<Value>	CanBeImplicit:true}
+					{$ !arg/Type:<t/String>	<Description>	DefaultValue:<>}
 				]
 			}
 		]
@@ -59,7 +58,7 @@
 						DefaultValue:[]
 						Description:<Contains all types that are defined in the specified namespace.>
 					}
-					{$ !arg/Type:{ArrayType <s/AttachableAttributeDefinition>} 
+					{$ !arg/Type:{ArrayType <s/AttachableAttributeDefinition>} <AttachableAttributes>
 						DefaultValue:[]
 						Description:<Contains all attachable attributes that are defined in the specified namespace.>
 					}
@@ -85,40 +84,40 @@
 			]}
 
 			
-			{PrimitiveTypeDefinition <Variance> c/ValidValues:[<Abstract> <Extendable> <Final>]}
+			{PrimitiveTypeDefinition <ObjectKind> c/ValidValues:[<Abstract> <Extendable> <Final>]}
 
-			{ObjectTypeDefinition <Definition>
+			{ObjectTypeDefinition <Definition> Kind:Extendable
 				{$ !arg/Type:<t/Identifier>	<Name> CanBeImplicit:true}
 				{$ !arg/Type:<t/String>		<Description> DefaultValue:<>}
 			}
 			
 			{ObjectTypeDefinition <ObjectTypeDefinition> Extends:<s/Definition>
 				Attributes:[
-					{$ <Kind> !arg/Type:<s/ObjectKind> DefaultValue:Final}
-					{$ <TypeParameters>	!arg/Type:{ArrayType <s/TypeParameterDefinition>} DefaultValue:[]}
-					{$ <Extends>		!arg/Type:[<s/TypeReference> <s/GenericType>] DefaultValue:<t/Object>}
-					{$ <Implements>		!arg/Type:{ArrayType [<s/TypeReference> <s/GenericType>]} DefaultValue:[]}
-					{$ <Attributes>		!arg/Type:{ArrayType <s/Attribute>} DefaultValue:[]}
+					{$ <Kind>	!arg/Type:<s/ObjectKind>	DefaultValue:Final}
+					{$ <TypeParameters>	!arg/Type:{ArrayType <s/TypeParameterDefinition>}	DefaultValue:[]}
+					{$ <Extends>	!arg/Type:[<s/TypeReference> <s/GenericType>]	DefaultValue:<t/Object>}
+					{$ <Implements>	!arg/Type:{ArrayType [<s/TypeReference> <s/GenericType>]}	DefaultValue:[]}
+					{$ <Attributes>	!arg/Type:{ArrayType <s/Attribute>}	DefaultValue:[]}
 				]
 			}
 			
-			{PrimitiveTypeDefinition <ObjectKind> c/ValidValues:[<In> <Out> <InOut>]}
+			{PrimitiveTypeDefinition <Variance> c/ValidValues:[<In> <Out> <InOut>]}
 
 			{ObjectTypeDefinition <TypeParameterDefinition>
 				Attributes:[
-					{$ !arg/Type:<t/Identifier> <Name> CanBeImplicit:true}
-					{$ !arg/Type:<t/String> <Description> DefaultValue:<>}
-					{$ !arg/Type:<t/Variance> <Variance> DefaultValue:InOut}
+					{$ !arg/Type:<t/Identifier>	<Name>	CanBeImplicit:true}
+					{$ !arg/Type:<t/String>	<Description>	DefaultValue:<>}
+					{$ !arg/Type:<t/Variance>	<Variance>	DefaultValue:InOut}
 				]
 			}
 			
 			{ObjectTypeDefinition <Attribute>
 				Attributes:[
 					{$ !arg/Type:<t/Identifier> <Name> CanBeImplicit:true}
-					{$ !arg/Type:<t/String> <Description> DefaultValue:<>}
-					{$ !arg/Type:<s/Type> <Type>}
-					{$ !arg/Type:<t/Boolean> <CanBeImplicit> DefaultValue:false}
-					{$ !arg/Type:<t/AnyType> <DefaultValue> DefaultValue:NoDefaultValue}
+					{$ !arg/Type:<t/String>		<Description> DefaultValue:<>}
+					{$ !arg/Type:<s/Type>		<Type>}
+					{$ !arg/Type:<t/Boolean>	<CanBeImplicit> DefaultValue:false}
+					{$ !arg/Type:<t/AnyType>	<DefaultValue> DefaultValue:NoDefaultValue}
 				]
 			}
 			
@@ -160,7 +159,7 @@
 				<s/UnionType>
 				<s/ArrayType>
 				<s/TypeArgument>
-				<s/GenericType>
+				<s/Instantiate>
 				<s/ObjectType>
 				<s/AnyType>
 			]}

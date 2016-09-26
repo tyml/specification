@@ -1,3 +1,3 @@
 cd spec-viewer
-copy style.css ..\Dist\style.css
-jspm run src/console.tsx ../SPEC.tyml --out=../Dist
+copy style.css ..\dist\style.css
+node dist-cli/console.js ../SPEC.tyml --out=../dist

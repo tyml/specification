@@ -1,15 +1,15 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import "reflect-metadata";
-import "./Types/types.tsx";
-import { Content } from "./Types/types.tsx";
-import { Deserializer } from "./Helper/Deserializer.ts";
-import { AnnotationBasedTypeSystem } from "./Helper/TypeSystem/AnnotationBasedTypeSystem.ts";
-import commandLineArgs from "command-line-args";
-import ReactDOMServer from 'react-dom/server';
+import "./Types/types";
+import { Content } from "./Types/types";
+import { Deserializer } from "./Helper/Deserializer";
+import { AnnotationBasedTypeSystem } from "./Helper/TypeSystem/AnnotationBasedTypeSystem";
+import * as commandLineArgs from "command-line-args";
+import * as ReactDOMServer from 'react-dom/server';
 import "../tyml-parser/tyml.js";
-import fs from "fs-extra";
-import path from "path";
+import * as fs from "fs-extra";
+import * as path from "path";
 
 interface CliArgs {
     src: string;

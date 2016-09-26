@@ -1,26 +1,18 @@
 {
     "compilerOptions": {
-        "module": "system",
+        "module": "commonjs",
         "target": "es5",
         "noImplicitAny": true,
         "allowUnreachableCode": false,
         "sourceMap": true,
 		"jsx": "react",
         "experimentalDecorators": true,
-        "emitDecoratorMetadata": true
+        "emitDecoratorMetadata": true,
+        "outDir": "dist-cli"
     },
-    "files": [
-        "typings/index.d.ts",
+    "include": [
         "tyml-parser/tyml.d.ts",
-        "src/Typings.d.ts",
-        "src/app.tsx",
-        "src/Types/types.tsx", 
-        "src/Helper/TypeSystem/AbstractTypeSystem.ts",
-        "src/Helper/TypeSystem/AnnotationBasedTypeSystem.ts",
-        "src/Helper/Annotations.ts",
-        "src/Helper/Deserializer.ts",
-        "src/console.tsx",
-        "src/Helper/EglLexer.ts",
-        "src/Types/LatexManager.tsx"
+        "src/**/*.ts",
+        "src/**/*.tsx"
     ]
 }

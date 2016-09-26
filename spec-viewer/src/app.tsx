@@ -2,12 +2,13 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import "reflect-metadata";
 import "./Types/types.tsx";
-import { HtmlRenderState, Content, Constraint, ContentArray, Productions } from "./Types/types.tsx";
+import { HtmlRenderState, Content, Constraint, ContentArray, Productions } from "./Types/types";
 import $ from "jquery";
-import { Deserializer } from "./Helper/Deserializer.ts";
-import { AnnotationBasedTypeSystem } from "./Helper/TypeSystem/AnnotationBasedTypeSystem.ts";
+import { Deserializer } from "./Helper/Deserializer";
+import { AnnotationBasedTypeSystem } from "./Helper/TypeSystem/AnnotationBasedTypeSystem";
 import "../tyml-parser/tyml.js";
-import * as Utils from "./Types/Utils.ts";
+import * as Utils from "./Types/Utils";
+import "../node_modules/katex/dist/katex.min.css";
 
 type GUIProps = { };
 type GUIState = { content: Content; state: HtmlRenderState; };

@@ -97,6 +97,7 @@
 				{Productions <<
 					Trivias  ::= (WS | Comment)+
 				>>}
+				{--
 {-todo-
 				If a {Reference <Tyml Processor>} stores {Reference <Trivias>}, 
 				they should be stor
@@ -105,18 +106,18 @@
 
 				{Example <Trivias> ![
 					{TymlCode <<
-						Element1 {-- Comment1 --}
-						{-- Comment2 --}
-						{-txt-Comment3--}-txt-}
+						Element1 {-- Comment1 - -}
+						{-- Comment2 - -}
+						{-txt-Comment3- -}-txt-}
 						Element2
 					>>}
 
 					The trailing trivia {Reference <Comment1>} as well as its surrounding whitespace and the line break belong to {Reference <Element1>},
 					The leading trivia {Reference <Comment2>}, {Reference <Comment3>} and its surrounding whitespace including both line breaks
 					belong to {Reference <Element2>}.
-					The Delimiter of {Reference <Comment3>} is {Text <txt>}, the text of its {Reference <AnyText>} child is {Text <Comment3--}>}.
+					The Delimiter of {Reference <Comment3>} is {Text <txt>}, the text of its {Reference <AnyText>} child is {Text <Comment3- -}>}.
 				]}
--todo-}
+-todo-}	--}
 			]}
 
 
@@ -227,8 +228,8 @@
 				The header is defined as follows:
 				{Productions <<
 					Header ::= '{!tyml 0.9' (Trivias PrefixDef)* 
-											(Trivias AliasDef)* 
-											(Trivias HeaderAttr)* Trivias? '}'
+					                        (Trivias AliasDef)* 
+					                        (Trivias HeaderAttr)* Trivias? '}'
 				>>}
 				Later versions of Tyml will not change the {Reference <RecognizedAsTymlDocument>} production but will increase the header's version number.
 				For future Tyml 1.0 documents however, the version will be optional and a non-digit char will follow instead.

@@ -1,5 +1,5 @@
-import { AnnotationBasedTypeSystem } from "./TypeSystem/AnnotationBasedTypeSystem.ts";
-import { NamespacedIdentifier } from "./TypeSystem/AbstractTypeSystem.ts";
+import { AnnotationBasedTypeSystem } from "./TypeSystem/AnnotationBasedTypeSystem";
+import { NamespacedIdentifier } from "./TypeSystem/AbstractTypeSystem";
 
 export interface FieldOptions {
 	canBeImplicit?: boolean;

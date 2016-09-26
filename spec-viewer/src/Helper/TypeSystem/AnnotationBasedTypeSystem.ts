@@ -1,7 +1,7 @@
-import { Type, ArrayType, StringType, PrimitiveType, ObjectType, UnionType, NamespacedIdentifier, TypeSystem } from "./AbstractTypeSystem.ts";
-import { Field, UnionTypeOptions } from "./../Annotations.ts";
-import HashMap from "hashmap";
-import { Cached } from "../Cached.ts";
+import { Type, ArrayType, StringType, PrimitiveType, ObjectType, UnionType, NamespacedIdentifier, TypeSystem } from "./AbstractTypeSystem";
+import { Field, UnionTypeOptions } from "./../Annotations";
+import { HashMap } from "hashmap";
+import { Cached } from "../Cached";
 
 
 type Ctor = any;

@@ -11,8 +11,7 @@ export function formatCode(code: string): string {
 	var codeLines = code.split(/\r\n|\n/);
 	var minWhitespaces = code.length;
 
-	const isWs = (s: string) => s == " ";
-
+	const isWs = (s: string) => s == " " || s == "\t";
 
 	var start = -1;
 	var end = -1;
@@ -39,7 +38,6 @@ export function formatCode(code: string): string {
 		}
 		if (idx != end) result += "\n";
 	});
-
 	return result;
 }
 
