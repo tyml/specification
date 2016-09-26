@@ -1,4 +1,4 @@
-declare module Tyml {
+export declare module Tyml {
     class ArgumentExceptionHelper {
         static ensureUndefinedOrTypeOf(obj: any, type: any, name: string): void;
         static ensureNullOrTypeOf(obj: any, type: any, name: string): void;
@@ -6,7 +6,7 @@ declare module Tyml {
         static ensureArrayTypeOf(object: any[], elementType: any, name: string): void;
     }
 }
-declare module Tyml {
+export declare module Tyml {
     class TextPoint {
         private line;
         private column;
@@ -36,7 +36,7 @@ declare module Tyml {
         contains(p: TextPoint): boolean;
     }
 }
-declare module Tyml.Ast {
+export declare module Tyml.Ast {
     class TymlNodeType {
         private name;
         constructor(name: string);
@@ -82,7 +82,7 @@ declare module Tyml.Ast {
         static getNsAttributeType(): any;
     }
 }
-declare module Tyml.Ast {
+export declare module Tyml.Ast {
     interface TymlTextRegionNode extends TymlNode {
         getTextRegion(): TextRegion;
         getNodeAt(point: TextPoint): TymlTextRegionNode;
@@ -176,7 +176,7 @@ declare module Tyml.Ast {
         getNamespace(): TymlNormalString;
     }
 }
-declare module Tyml.Ast.Implementation {
+export declare module Tyml.Ast.Implementation {
     /**
      * Is abstract. Do not construct.
      */
@@ -395,7 +395,7 @@ declare module Tyml.Ast.Implementation {
         getNodeType(): TymlNodeType;
     }
 }
-declare module Tyml.Parser {
+export declare module Tyml.Parser {
     enum MessageType {
         FATAL = 0,
         ERROR = 1,
@@ -435,7 +435,7 @@ declare module Tyml.Parser {
         parse(text: string): ParseResult;
     }
 }
-declare module Tyml.Parser {
+export declare module Tyml.Parser {
     class Tokenizer {
         private text;
         private currentPosition;
@@ -460,7 +460,7 @@ declare module Tyml.Parser {
         getRegion(startPos: any): TextRegion;
     }
 }
-declare module Tyml.Parser {
+export declare module Tyml.Parser {
     class MessageDictionary {
         getUnexpectedCharactersBeforeDocumentMessage(unexpectedChars: string): string;
         getNoDocumentHeaderMessage(): string;
@@ -485,7 +485,7 @@ declare module Tyml.Parser {
         getInvalidEscapedStringIdentifierMessage(unexpectedCharacter: string): string;
     }
 }
-declare module Tyml.Parser {
+export declare module Tyml.Parser {
     class GermanMessageDictionary extends MessageDictionary {
         getUnexpectedCharactersBeforeDocumentMessage(unexpectedChars: string): string;
         getNoDocumentHeaderMessage(): string;
@@ -506,7 +506,7 @@ declare module Tyml.Parser {
         getInvalidEscapedStringIdentifierMessage(unexpectedCharacter: string): string;
     }
 }
-declare module Tyml.Parser {
+export declare module Tyml.Parser {
     class Parser implements ParserInterface {
         private messageDictionary;
         private letters;
@@ -560,7 +560,7 @@ declare module Tyml.Parser {
         private parseString(t, logger, s);
     }
 }
-declare module Tyml.Transformer {
+export declare module Tyml.Transformer {
     class AstVisitor<T> {
         accept(node: Ast.TymlNode): T;
         visitNode(node: Ast.TymlNode): T;
@@ -580,24 +580,24 @@ declare module Tyml.Transformer {
         transform(t: Ast.TymlDocument): T;
     }
 }
-declare module Tyml.Transformer {
+export declare module Tyml.Transformer {
     class XmlTransformer implements ITymlTransformer<XMLDocument> {
         transform(node: Ast.TymlDocument): XMLDocument;
         reverseTransform(doc: XMLDocument): Ast.TymlDocument;
     }
 }
-declare module Tyml.Transformer {
+export declare module Tyml.Transformer {
     class JsonTransformer implements ITymlTransformer<Object> {
         transform(node: Ast.TymlDocument): Object;
         reverseTransform(doc: Object): Ast.TymlDocument;
     }
 }
-declare module Tyml.Transformer {
+export declare module Tyml.Transformer {
     class PrettyprintTransformer implements ITymlTransformer<String> {
         transform(node: Ast.TymlNode): String;
     }
 }
-declare module Tyml.Transformer {
+export declare module Tyml.Transformer {
     class TexTransformer implements ITymlTransformer<string> {
         transform(node: Ast.TymlNode): string;
     }
