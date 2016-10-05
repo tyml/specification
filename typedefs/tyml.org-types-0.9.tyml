@@ -1,5 +1,5 @@
 {!tyml 0.9
-	!ns:    <tyml.org/typedef/0.9>
+	!ns/:    <tyml.org/typedef/0.9>
 	!ns/t:  <tyml.org/types/0.9>
 	!ns/c:  <tyml.org/typedef/constraints/0.9>
 }
@@ -10,7 +10,7 @@
 			{AliasDefinition <Any> {AnyType} Description:<Represents the root type "Any".>}
 			{AliasDefinition <String> {StringType} Description:<Represents the root type "String".>}
 			{AliasDefinition <Primitive> {PrimitiveType} Description:<Represents the root type "Primitive".>}
-			{AliasDefinition <Array> TypeParameters:[{$ <T>}] {ArrayType {TypeParameter <T>}} Description:<Represents the root type "Array".>}
+			{AliasDefinition <Array> TypeParameters:[{~ <T>}] {ArrayType {TypeParameter <T>}} Description:<Represents the root type "Array".>}
 			{AliasDefinition <Object> {ObjectType} Description:<Represents the root type "Object".>}
 			
 
@@ -23,8 +23,8 @@
 			}
 			
 			{PrimitiveTypeDefinition <Boolean> Description:<Represents a boolean (true or false) value.> c/ValidValues:[
-				{$ <true> Description:<Represents the boolean true.>} 
-				{$ <false> Description:<Represents the boolean false.>} 
+				{~ <true> Description:<Represents the boolean true.>} 
+				{~ <false> Description:<Represents the boolean false.>} 
 			]}
 			
 			{StringTypeDefinition <Identifier> c/Regex:<[A-Za-z][A-Za-z0-9_]*>}
@@ -33,17 +33,17 @@
 			{StringTypeDefinition <NamespacedIdentifier> c/Regex:<([A-Za-z][A-Za-z0-9_]*/)?[A-Za-z][A-Za-z0-9_]*>}
 			
 			{PrimitiveTypeDefinition <Undefined> c/ValidValues:[<undefined>]}   
-			{AliasDefinition <Optional> TypeParameters:[{$ <T>}] [<t/Undefined> {TypeParameter <T>}]}
+			{AliasDefinition <Optional> TypeAttributes:[{~ <T>}] [<t/Undefined> {TypeAttribute <T>}]}
 
 			{PrimitiveTypeDefinition <Null> c/ValidValues:[<null>]}   
-			{AliasDefinition <Nullable> TypeParameters:[{$ <T>}] [<t/Null> {TypeParameter <T>}]}
+			{AliasDefinition <Nullable> TypeAttributes:[{~ <T>}] [<t/Null> {TypeAttribute <T>}]}
 
-			{AliasDefinition <Union2> TypeParameters:[{$ <T1>} {$ <T2>}] [{$ <T1>} {$ <T2>}]}
+			{AliasDefinition <Union2> TypeAttributes:[{~ <T1>} {~ <T2>}] [{~ <T1>} {~ <T2>}]}
 
-			{ObjectTypeDefinition <KeyValuePair> TypeParameters:[{$ <Key>} {$ <Value>}]
+			{ObjectTypeDefinition <KeyValuePair> TypeAttributes:[{~ <Key>} {~ <Value>}]
 				Attributes:[
-					{$ <Key> Type:{TypeParameter <Key>}}
-					{$ <Value> Type:{TypeParameter <Value>}}
+					{~ <Key> Type:{TypeAttribute <Key>}}
+					{~ <Value> Type:{TypeAttribute <Value>}}
 				]
 			}
 

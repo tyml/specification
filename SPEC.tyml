@@ -125,18 +125,17 @@
 				Namespaces are used to avoid naming collisions. 
 				Since namespaces can become quite long, prefixes are used to shorten them:
 				{Productions <<
-					Namespace      ::= (Identifier "/")* Identifier
-					NonEmptyPrefix ::= Identifier
-					Prefix         ::= NonEmptyPrefix?
+					Namespace      ::= (Identifier '/')* Identifier
+					Prefix         ::= Identifier?
 				>>}
 
 				Such namespace prefixes can be defined by {Reference <PrefixDef+s>} nodes in the following way:
 				{Productions <<
-					PrefixDef ::= '!ns' ('/' NonEmptyPrefix)? ':' Trivias? '<' Namespace '>'
+					PrefixDef ::= '!ns' '/' Prefix ':' Trivias? '<' Namespace '>'
 				>>}
 
 				{Property <PrefixDef> <Prefix> ![
-					The prefix defined by a {Reference <PrefixDef>} is the text of the optional {Reference <NonEmptyPrefix>} child.
+					The prefix defined by a {Reference <PrefixDef>} is the text of the {Reference <Prefix>} child.
 				]}
 
 				{Property <PrefixDef> <Namespace> ![
@@ -161,11 +160,11 @@
 				Prefixes are used for type names:
 				{Productions <<
 					LocalTypeName     ::= Identifier
-					TypeName          ::= (NonEmptyPrefix '/')? LocalTypeName
-					QualifiedTypeName ::= Namespace "#" LocalTypeName
+					TypeName          ::= (Prefix '/')? LocalTypeName
+					QualifiedTypeName ::= Namespace '#' LocalTypeName
 				>>}
 
-				A {Reference <TypeName>} consists of a prefix that is the text of the optional {Reference <NonEmptyPrefix>} child 
+				A {Reference <TypeName>} consists of a prefix that is the text of the optional {Reference <Prefix>} child 
 				and a local type name that is the text of the {Reference <LocalTypeName>} child.
 
 				{Constraint <Well-formedness> ![
@@ -180,7 +179,7 @@
 				{Example <Type Name resolution> ![
 					{TymlCode <<
 						{t/MyTypeName !ns/t:<tyml.org/example>}
-						{MyTypeName !ns:<tyml.org/example>}
+						{MyTypeName !ns/:<tyml.org/example>}
 					>>}
 					Both type names resolve to the qualified type name {Text <tyml.org/example#MyTypeName>}.
 				]}
@@ -259,8 +258,9 @@
 
 				{Example <Well-formed Tyml Document> ![
 					{TymlCode <<
-						{!tyml 0.9 !ns:<tyml.org/example>}
-						{!alias <#Root> <ApplicationRoot>}
+						{!tyml 0.9 !ns/:<tyml.org/example>
+							!alias/#Root:<ApplicationRoot>
+						}
 						{#Root}
 					>>}
 				]}
@@ -311,9 +311,9 @@
 						Escape sequences are constructed as following:
 						{Productions <<
 							EscapeSequence     ::=  '\' (EscapedCR | EscapedLF | EscapedTab | EscapedSpecialChar | CodePointRef | IgnoredWS)
-							EscapedCR          ::= "r"
-							EscapedLF          ::= "n"
-							EscapedTab         ::= "t"
+							EscapedCR          ::= 'r'
+							EscapedLF          ::= 'n'
+							EscapedTab         ::= 't'
 							EscapedSpecialChar ::= [\<>{}] | '[' | ']'
 							CodePointRef       ::= 'u' Hex Hex Hex Hex
 							Hex                ::= [0-9A-F]
@@ -343,7 +343,7 @@
 					
 						The following production describes heredoc strings:
 						{Productions <<
-							HeredocString ::= '<' Delimiter  '<' (AnyText | '\' Delimiter EscapeSequence)* '>' Delimiter  '>'
+							HeredocString ::= '<' Delimiter '<' (AnyText | '\' Delimiter EscapeSequence)* '>' Delimiter '>'
 						>>}
 
 
@@ -381,9 +381,9 @@
 					Objects can compose other elements by using attributes. They have the following structure:
 					{Productions <<
 						Object  ::= '{' ObjType (Trivias PrefixDef)* (Trivias Attribute)* Trivias? '}'
-						ObjType ::= (CastCharacter? (TypeName | '#' AliasName)) | InferenceCharacter
-						CastCharacter ::= '='
-						InferenceCharacter ::= '$'
+						ObjType ::= (CastIndicator? (TypeName | '#' AliasName)) | InferenceIndicator
+						CastIndicator ::= '='
+						InferenceIndicator ::= '~'
 					>>}
 
 					{Constraint <Well-formedness> ![
@@ -392,11 +392,11 @@
 					]}
 
 					{Definition <Cast Object> ![
-						The parent {Reference <Object>} of a {Reference <CastCharacter>} node is called {Keyword <Cast Object>}.
+						The parent {Reference <Object>} of a {Reference <CastIndicator>} node is called {Keyword <Cast Object>}.
 					]}
 
 					{Definition <Inference Object> ![
-						The parent {Reference <Object>} of a {Reference <InferenceCharacter>} node 
+						The parent {Reference <Object>} of a {Reference <InferenceIndicator>} node 
 						is called {Keyword <Inference Object>}.
 					]}
 
@@ -410,8 +410,9 @@
 
 					{Example <Cast Object, Qualified Type Name> ![
 						{TymlCode <<
-							{!tyml 0.9 !ns/t:<tyml.org/example>}
-							{!alias <#MyAliasName> <t/MyTypeName>}
+							{!tyml 0.9 !ns/t:<tyml.org/example> 
+								!alias/#MyAliasName:<t/MyTypeName>
+							}
 							{=#MyAliasName <Value for implicit attribute>}
 						>>}
 						
@@ -423,14 +424,15 @@
 					{Productions <<
 						Attribute         ::= ImplicitAttribute | ExplicitAttribute
 						ImplicitAttribute ::= AttributeValue
-						ExplicitAttribute ::= AttributeName ':' Trivias? AttributeValue
+						TypeAttributeIndicator ::= "'"
+						ExplicitAttribute ::= TypeAttributeIndicator? AttributeName ':' Trivias? AttributeValue
 					>>}
 
 					An {Reference <AttributeName>} is defined similar to {Reference <TypeName>}, however its prefix can be empty:
 					{Productions <<
 						LocalAttrName     ::= Identifier
 						AttributeName     ::= (Prefix '/')? LocalAttrName
-						QualifiedAttrName ::= (Namespace | QualifiedTypeName) ":" LocalAttrName
+						QualifiedAttrName ::= (Namespace | QualifiedTypeName) ':' LocalAttrName
 					>>}
 
 					An {Reference <AttributeName>} consists of a prefix and a local attribute name:
@@ -462,7 +464,7 @@
 
 					{Example <Attributes> ![
 						{TymlCode <<
-							{!tyml 0.9 !ns:<tyml.org/example1> !ns/t:<tyml.org/example2>}
+							{!tyml 0.9 !ns/:<tyml.org/example1> !ns/t:<tyml.org/example2>}
 							{Root1 Attr1:0 /Attr2:0 t/Attr3:0}
 							{t/Root2 Attr4:0 /Attr5:0 t/Attr6:0}
 						>>}

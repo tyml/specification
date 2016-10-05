@@ -8,7 +8,7 @@
 	{NamespaceDefinition <tns>  
 		Types:[
 			{ObjectTypeDefinition <FStabConfig>
-				Attributes:[{$ !arg/Type:{ArrayType <tns/FStabEntry>} <Items> CanBeImplicit:true}]
+				Attributes:[{~ 'Type:{ArrayType <tns/FStabEntry>} <Items> CanBeImplicit:true}]
 			}
 
 			{PrimitiveTypeDefinition <FSType> c/ValidValues:[<ext3> <ext4> <btrfs>]}
@@ -19,23 +19,23 @@
 			{ObjectTypeDefinition <FStabEntry>
 				Description:<Schema for an fstab entry>
 				Attributes:[
-					{$ !arg/Type:<t/String> <MountPoint> CanBeImplicit:true}
-					{$ !arg/Type:[
+					{~ 'Type:<t/String> <MountPoint> CanBeImplicit:true}
+					{~ 'Type:[
 							<tns/DiskDevice> 
 							<tns/DiskUUID>
 							<tns/NFS>
 							<tns/TmpFS>
 						] <Storage>
 					}
-					{$ !arg/Type:[<tns/FSType> <t/Undefined>] <FSType> DefaultValue:undefined}
-					{$ !arg/Type:<Options> <tns/Options> DefaultValue:[]}
-					{$ !arg/Type:<t/Boolean> <Readonly> DefaultValue:false}
+					{~ 'Type:[<tns/FSType> <t/Undefined>] <FSType> DefaultValue:undefined}
+					{~ 'Type:<Options> <tns/Options> DefaultValue:[]}
+					{~ 'Type:<t/Boolean> <Readonly> DefaultValue:false}
 				]
 			}
 			
 			{ObjectTypeDefinition <DiskDevice>
 				Attributes:[
-					{$ !arg/Type:<t/String> <Device> CanBeImplicit:true}
+					{~ 'Type:<t/String> <Device> CanBeImplicit:true}
 				]
 			}
 
@@ -46,7 +46,7 @@
 
 			{ObjectTypeDefinition <DiskUUID>
 				Attributes:[
-					{$ !arg/Type:<tns/UUID> <Label>}
+					{~ 'Type:<tns/UUID> <Label>}
 				]
 			}
 
@@ -54,8 +54,8 @@
 			
 			{ObjectTypeDefinition <NFS>
 				Attributes:[
-					{$ <RemotePath> !arg/Type:<tns/RemotePath>}
-					{$ <Server> !arg/Type:<t/String>}
+					{~ <RemotePath> 'Type:<tns/RemotePath>}
+					{~ <Server> 'Type:<t/String>}
 					{-- {Attribute <Server> Type:[<net/IPv4> <net/IPv6> <net/HostName>]} --}
 				]    
 			}
@@ -66,7 +66,7 @@
 
 			{ObjectTypeDefinition <TmpFS>
 				Attributes:[
-					{$ !arg/Type:<TmpFSSize> <SizeInMb>}
+					{~ 'Type:<TmpFSSize> <SizeInMb>}
 				]
 			}
 		]

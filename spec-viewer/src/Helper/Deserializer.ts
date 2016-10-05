@@ -1,5 +1,5 @@
 import { Type, TypeSystem, NamespacedIdentifier, ObjectType, StringType, ArrayType, PrimitiveType, UnionType } from "./TypeSystem/AbstractTypeSystem";
-import * as Tyml2 from "../../tyml-parser/tyml";
+import * as Tyml from "../../tyml-parser/tyml";
 
 export class Deserializer {
 	
@@ -9,7 +9,7 @@ export class Deserializer {
 	
 	public deserialize(tymlDoc: string): any {
 		
-		const p = new Tyml2.Parser.Parser();
+		const p = new Tyml.Parser.Parser();
 		const parseResult = p.parse(tymlDoc);
 		const doc = parseResult.getDocument(); 
 		
