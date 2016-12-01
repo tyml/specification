@@ -26,7 +26,10 @@ The following document provides an insight into the syntax of Tyml and
 demonstrates how tyml could be used to describe a simple contact book by using all essential language features:
 
 ```tyml
-{!tyml 0.9 !ns:<tyml.org/examples/contact-book>} 
+{!tyml 0.9 
+	!ns/:<tyml.org/examples/contact-book>
+	!alias/#Kywrd:</Keyword>
+} 
 {-- Tyml documents are UTF-8 encoded --}
 {ContactBook !ns/ext:<tyml.org/examples/contact-book-ext>
 	{-- The whitespace after "\" and the backslash itself will be removed --}
@@ -41,7 +44,7 @@ demonstrates how tyml could be used to describe a simple contact book by using a
 	]
 	Description:![
 		{-- This is a markup array (introduced by "!["), text can be mixed with objects --}
-		This {Keyword <contact book>} lists the initiators of tyml.
+		This {#Kywrd <contact book>} lists the initiators of tyml.
 	]
 	Contacts:[
 		{-- This is an array of elements --}
@@ -54,7 +57,7 @@ demonstrates how tyml could be used to describe a simple contact book by using a
 				so that comments can contain comments: {-- --} 
 			-delimiter456-}
 		}
-		{$ {-- Contact type is inferred --}
+		{~ {-- Contact type is inferred --}
 			<Robin Rüde>
 			Mail:         <robin.ruede@tyml.org>
 			ext/HtmlText: <txt<<b>Hello</b> World!>txt>

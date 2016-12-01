@@ -235,7 +235,8 @@
 
 				Alias definitions can be used to shorten object types. They are defined as follows:
 				{Productions <<
-					AliasDef ::= '!alias/#' AliasName ':' Trivias? '<' TypeName '>'
+					AliasDef ::= '!alias/' AliasIndicator AliasName ':' Trivias? '<' TypeName '>'
+					AliasIndicator ::= '#'
 					AliasName ::= Identifier
 				>>}
 
@@ -381,7 +382,7 @@
 					Objects can compose other elements by using attributes. They have the following structure:
 					{Productions <<
 						Object  ::= '{' ObjType (Trivias PrefixDef)* (Trivias Attribute)* Trivias? '}'
-						ObjType ::= (CastIndicator? (TypeName | '#' AliasName)) | InferenceIndicator
+						ObjType ::= (CastIndicator? (TypeName | AliasIndicator AliasName)) | InferenceIndicator
 						CastIndicator ::= '='
 						InferenceIndicator ::= '~'
 					>>}

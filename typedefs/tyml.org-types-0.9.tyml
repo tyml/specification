@@ -1,41 +1,43 @@
 {!tyml 0.9
-	!ns/:    <tyml.org/typedef/0.9>
-	!ns/t:  <tyml.org/types/0.9>
-	!ns/c:  <tyml.org/typedef/constraints/0.9>
+	!ns/:	<tyml.org/typedef/0.9>
+	!ns/t:	<tyml.org/types/0.9>
+	!ns/c:	<tyml.org/typedef/constraints/0.9>
 }
 
 {DefinitionPackage [
 	{NamespaceDefinition <t>
 		Types:[
 			{AliasDefinition <Any> {AnyType} Description:<Represents the root type "Any".>}
-			{AliasDefinition <String> {StringType} Description:<Represents the root type "String".>}
-			{AliasDefinition <Primitive> {PrimitiveType} Description:<Represents the root type "Primitive".>}
-			{AliasDefinition <Array> TypeParameters:[{~ <T>}] {ArrayType {TypeParameter <T>}} Description:<Represents the root type "Array".>}
-			{AliasDefinition <Object> {ObjectType} Description:<Represents the root type "Object".>}
-			
+			{AliasDefinition <StringBase> {StringType} Description:<Represents the root type "String".>}
+			{AliasDefinition <PrimitiveBase> {PrimitiveType} Description:<Represents the root type "Primitive".>}
+			{AliasDefinition <ArrayBase> TypeParameters:[{~ <T>}] {ArrayType {TypeParameter <T>}} Description:<Represents the root type "Array".>}
+			{AliasDefinition <ObjectBase> {ObjectType} Description:<Represents the root type "Object".>}
 
-			{PrimitiveTypeDefinition <Integer> c/Regex:<-?(0|[1-9][0-9]*)> Description:<Represents an integer.>}
-			{PrimitiveTypeDefinition <Int32> Extends:<t/Integer> c/MinValue:-2147483648 c/MaxValue:2147483647}
+			{StringTypeDefinition <String>}
+			{ArrayTypeDefinition <Array> TypeParameters:[{~ <T>}] Extends:{ArrayBaseType {TypeParameter <T>}}}
+
+			{PrimitiveTypeDefinition <Integer> ValidValues:<(-)?(0|[1-9][0-9]*)> Description:<Represents an integer.>}
+			{PrimitiveTypeDefinition <Int32> Extends:<t/Integer> Constraints:[{c/MinValue -2147483648} {c/MaxValue 2147483647}]}
 
 
-			{PrimitiveTypeDefinition <Float> 
-				c/Regex:<f<[0-9]+(\.[0-9]+)>f> {-- e.g. 0.5 --} 
+			{PrimitiveTypeDefinition <Float>
+				ValidValues:<f<[0-9]+(\.[0-9]+)>f> {-- e.g. 0.5 --} 
 			}
 			
-			{PrimitiveTypeDefinition <Boolean> Description:<Represents a boolean (true or false) value.> c/ValidValues:[
-				{~ <true> Description:<Represents the boolean true.>} 
-				{~ <false> Description:<Represents the boolean false.>} 
+			{PrimitiveTypeDefinition <Boolean> Description:<Represents a boolean (true or false) value.> ValidValues:[
+				{~ <true> Description:<Represents the boolean true.>}
+				{~ <false> Description:<Represents the boolean false.>}
 			]}
 			
-			{StringTypeDefinition <Identifier> c/Regex:<[A-Za-z][A-Za-z0-9_]*>}
+			{StringTypeDefinition <Identifier> ValidValues:<[A-Za-z][A-Za-z0-9_]*>}
 			{StringTypeDefinition <NamespacePrefix> Extends:<t/Identifier>}
 
-			{StringTypeDefinition <NamespacedIdentifier> c/Regex:<([A-Za-z][A-Za-z0-9_]*/)?[A-Za-z][A-Za-z0-9_]*>}
+			{StringTypeDefinition <NamespacedIdentifier> ValidValues:<([A-Za-z][A-Za-z0-9_]*/)?[A-Za-z][A-Za-z0-9_]*>}
 			
-			{PrimitiveTypeDefinition <Undefined> c/ValidValues:[<undefined>]}   
+			{PrimitiveTypeDefinition <Undefined> ValidValues:[<undefined>]}
 			{AliasDefinition <Optional> TypeAttributes:[{~ <T>}] [<t/Undefined> {TypeAttribute <T>}]}
 
-			{PrimitiveTypeDefinition <Null> c/ValidValues:[<null>]}   
+			{PrimitiveTypeDefinition <Null> ValidValues:[<null>]}
 			{AliasDefinition <Nullable> TypeAttributes:[{~ <T>}] [<t/Null> {TypeAttribute <T>}]}
 
 			{AliasDefinition <Union2> TypeAttributes:[{~ <T1>} {~ <T2>}] [{~ <T1>} {~ <T2>}]}

@@ -4,7 +4,7 @@
 		<tyml<{!tyml !ns:<test.de>}{Root}>tyml>
 
 		ResultXml:<xml<
-			<Document xmlns="http://tyml.org/tyml-xml" Start="0" End="34">
+			<Document xmlns="tyml.org/tyml-xml" Start="0" End="34">
 				<Header Start="0" End="28">
 				</Header>
 				<Object Name="Root" Start="28" End="34">
@@ -147,14 +147,14 @@
 		}
 
 		{TestCase
-			<tyml<{!tyml} «1»a«2» {Test !ns:<http://test.de>}>tyml>
+			<tyml<{!tyml} «1»a«2» {Test !ns:<test.de>}>tyml>
 			Errors:[
 				{Error <The root element must be an object.> Location:{TextRegion 1 2}}
 			]
 		}
 
 		{TestCase
-			<tyml<{!tyml} «1»a«2» {Test !ns:<http://test.de>} «3»foo «4»>tyml>
+			<tyml<{!tyml} «1»a«2» {Test !ns:<test.de>} «3»foo «4»>tyml>
 			Errors:[
 				{Error <The root element must be an object.> Location:{TextRegion 1 2}}
 				{Error <Expected end of document after root object.> Location:{TextRegion 3 4}}
@@ -167,11 +167,11 @@
 	{TestCases Name:<Prefix> [
 
 		{TestCase
-			<tyml<{!tyml !ns:<http://test.de>}{Root}>tyml>
+			<tyml<{!tyml !ns:<test.de>}{Root}>tyml>
 		}
 
 		{TestCase
-			<tyml<{!tyml}{Root !ns:<http://test.de>}>tyml>
+			<tyml<{!tyml}{Root !ns:<test.de>}>tyml>
 		}
 
 		{TestCase
@@ -183,11 +183,11 @@
 
 
 		{TestCase
-			<tyml<{!tyml !ns/p:<http://test.de>}{p/Root}>tyml>
+			<tyml<{!tyml !ns/p:<test.de>}{p/Root}>tyml>
 		}
 
 		{TestCase
-			<tyml<{!tyml}{p/Root !ns/p:<http://test.de>}>tyml>
+			<tyml<{!tyml}{p/Root !ns/p:<test.de>}>tyml>
 		}
 
 		{TestCase
@@ -213,18 +213,18 @@
 		}
 
 		{TestCase
-			<tyml<{!tyml !ns/p:<http://test.de>}{p/Root «1»!ns/p:«2»<http://test.de>}>tyml>
+			<tyml<{!tyml !ns/p:<test.de>}{p/Root «1»!ns/p:«2»<test.de>}>tyml>
 			Errors:[
 				{Error <Prefix 'p' is already defined.> Location:{TextRegion 1 2}}
 			]
 		}
 
 		{TestCase
-			<tyml<{!tyml !ns:<http://test.de>}{Root !ns:<http://test.de>}>tyml>
+			<tyml<{!tyml !ns:<test.de>}{Root !ns:<test.de>}>tyml>
 		}
 
 		{TestCase
-			<tyml<{!tyml}{Root !ns:<http://test.de> «1»!ns:«2»<http://test.de>}>tyml>
+			<tyml<{!tyml}{Root !ns:<test.de> «1»!ns:«2»<test.de>}>tyml>
 			Errors:[
 				{Error <The empty prefix cannot be declared more than once on the same object.> Location:{TextRegion 1 2}}
 			]

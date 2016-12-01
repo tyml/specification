@@ -1,0 +1,91 @@
+{!tyml 0.9}
+{TymlTokens
+	Tokens:[
+		{Token <Whitespace>}
+
+		{Token <HeredocStringStart1>}
+		{Token <HeredocStringDelimiter>}
+		{Token <HeredocStringStart2>}
+		{Token <HeredocStringEnd1>}
+		{Token <HeredocStringEnd2>}
+		{Token <HeredocStringEscapeSeq>}
+		{Token <HeredocString>}
+
+		{Token <StringStart>}
+		{Token <StringEnd>}
+		{Token <String>}
+
+		{Token <ArrayStart>}
+		{Token <ArrayEnd>}
+		{Token <MarkupArrayStart>}
+		{Token <MarkupArrayEnd>}
+		{Token <MarkupString>}
+
+		{Token <CommentStart1>}
+		{Token <CommentDelimiter>}
+		{Token <CommentStart2>}
+		{Token <CommentEnd1>}
+		{Token <CommentEnd2>}
+		{Token <Comment>}
+
+		{Token <TypePrefix>}
+		{Token <TypeName>}
+
+		{Token <ObjectStart>}
+		{Token <ObjectCast>}
+		{Token <ObjectInference>}
+		{Token <ObjectEnd>}
+
+		{Token <AttributePrefix>}
+		{Token <PrefixSeparator>}
+		{Token <AttributeName>}
+		{Token <AttributeColon>}
+
+		{Token <EscapeSeqStart>}
+		{Token <EscapeSeq>}
+
+		{Token <Invalid>}
+		{Token <Primitive>}
+	]
+	DefaultColors:[
+		{Coloring <Invalid> {RgbColor 255 0 0}}	
+
+		{Coloring [
+				<HeredocStringStart1>
+				<HeredocStringDelimiter>
+				<HeredocStringStart2>
+				<HeredocStringEnd1>
+				<HeredocStringEnd2>
+			] 
+			{RgbColor 87 87 87}
+		}
+
+		{Coloring <HeredocString> {RgbColor 3 57 202}}
+
+		{Coloring <String> {RgbColor 3 57 202}}
+
+		{Coloring <MarkupString> {RgbColor 88 120 170}}
+
+		{Coloring [
+				<CommentStart1>
+				<CommentDelimiter>
+				<CommentStart2>
+				<Comment>
+				<CommentEnd1>
+				<CommentEnd2>
+			] 
+			{RgbColor 8 203 0}
+		}
+
+		{Coloring <TypePrefix> {RgbColor 73 175 175}}
+		{Coloring <TypeName> {RgbColor 43 145 175}}
+
+		{Coloring <AttributePrefix> {RgbColor 253 151 31}}
+		{Coloring <AttributeName> {RgbColor 233 131 11}}
+
+		{Coloring <Primitive> {RgbColor 214 49 217}}
+	]
+	TestCases:[
+		{TestCase <<({)(Test)(})>> [ObjectStart TypeName ObjectEnd]}
+	]
+}

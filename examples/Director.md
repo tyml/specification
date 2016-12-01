@@ -10,7 +10,7 @@ Document:
 
 ```tyml
 {!tyml 0.9 !ns/:<movies.mov/1.0>}
-{-- Spielberg was born in 1946 --}
+{-- This document lists the filmography of Spielberg --}
 {Director <Spielberg> Filmography:[
 	{Movie <Jaws> Year:1975}
 	{Movie <E.T.> Year:1982}
@@ -31,10 +31,10 @@ Type Definitions:
 		{Attribute 'Type:<t/String> <Title> CanBeImplicit:true}
 	]}
 	{ObjectTypeDefinition <Movie> Extends:<Video> Attributes:[
-		{Attribute 'Type:<t/Year> <Year>}
+		{Attribute 'Type:<t/Integer> <Year>}
 	]}
 	{ObjectTypeDefinition <Series> Extends:<Video> Attributes:[
-		{Attribute 'Type:<t/Years> {ArrayType <Year>}}
+		{Attribute 'Type:{ArrayType <t/Integer>} <Years>}
 	]}
 ]}
 ```
@@ -46,7 +46,7 @@ Document:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- Spielberg was born in 1946 -->
+<!-- This document lists the filmography of Spielberg -->
 <Director name="Spielberg" xmlns="http://movies.mov/xml-schema/1.0">
 	<Filmography>
 		<Movie title="Jaws" year="1975"/>
@@ -105,6 +105,7 @@ Document:
 
 ```json
 {
+	"_comment": "This document lists the filmography of Spielberg"
 	"$schema": "file://./schema.json",
 	"Director": {
 		"name": "Spielberg",
@@ -181,7 +182,7 @@ Document:
 
 ```yaml
 # yaml (Yaml has no header like xml or tyml)
-#Spielberg was born in 1946
+# This document lists the filmography of Spielberg
 Director:
 	name: Spielberg
 	filmography:
