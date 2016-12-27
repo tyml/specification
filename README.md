@@ -48,8 +48,8 @@ demonstrates how tyml could be used to describe a simple contact book by using a
 	]
 	Contacts:[
 		{-- This is an array of elements --}
-		{Contact <Henning Dieterichs> {-- This is an implicit attribute --}
-			Mail:	<henning.dieterichs@tyml.org>
+		{Contact <Henning> {-- This is an implicit attribute --}
+			Mail:	<henning@tyml.org>
 			{-- The html text attribute is not defined in 'Contact', but externally --}
 			ext/HtmlText: <delimiter123<<b>Hello</b> World!>delimiter123>
 			{-delimiter456- 
@@ -58,8 +58,8 @@ demonstrates how tyml could be used to describe a simple contact book by using a
 			-delimiter456-}
 		}
 		{~ {-- Contact type is inferred --}
-			<Robin Rüde>
-			Mail:         <robin.ruede@tyml.org>
+			<Robin>
+			Mail:         <robin@tyml.org>
 			ext/HtmlText: <txt<<b>Hello</b> World!>txt>
 		}
 	]
